@@ -29,7 +29,7 @@ class Plunk::Elasticsearch
     return " can't be blank." if query.blank?
 
     uri = URI.escape "#{@endpoint}/_validate/query?explain=true"
-    response = RestClient.post(uri, build_ES_validator(query))
+    response = RestClient.post(uri, Plunk::Elasticsearch.build_ES_validator(query))
 
     json = JSON.parse(response)
 
