@@ -1,4 +1,5 @@
 require 'parslet'
+require 'active_support/core_ext'
 
 class Plunk::Transformer < Parslet::Transform
 
@@ -31,7 +32,7 @@ class Plunk::Transformer < Parslet::Transform
   end
 
   rule(
-    search: simple(:query),
+    search: simple(:result_set),
     timerange: {
       quantity: simple(:quantity),
       quantifier: simple(:quantifier)
@@ -53,10 +54,10 @@ class Plunk::Transformer < Parslet::Transform
         int_quantity.weeks.ago
       end
 
-    end_time = Time.now.utc.to_datetime
+    end_time = Time.now
 
     Plunk::ResultSet.new(
-      query_string: query,
+      query_string: result_set.raw_query,
       start_time: start_time,
       end_time: end_time)
   end
