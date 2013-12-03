@@ -29,7 +29,7 @@ class Plunk::Elasticsearch
     return " can't be blank." if query.blank?
 
     uri = URI.escape "#{@endpoint}/_validate/query?explain=true"
-    response = RestClient.post(uri, Plunk::Elasticsearch.build_ES_validator(query))
+    response = RestClient.post(uri, build_ES_validator(query))
 
     json = JSON.parse(response)
 
@@ -57,7 +57,7 @@ class Plunk::Elasticsearch
   end
 
   # nested field matcher
-  def self.extract_values(hash, keys)
+  def extract_values(hash, keys)
     @vals ||= []
 
     hash.each_pair do |k, v|
@@ -78,8 +78,8 @@ class Plunk::Elasticsearch
     return @vals
   end
 
-  def self.build_ES_validator(query)
-    if valid_json? query
+  def build_ES_validator(query)
+    if Plunk::Elasticsearch.valid_json? query
       # Strip the top-level "query" paramter since ES doesn't expect it
       JSON.parse(query)['query'].to_json
     else
@@ -93,8 +93,8 @@ class Plunk::Elasticsearch
     end
   end
 
-  def self.build_ES_query(query)
-    if valid_json? query
+  def build_ES_query(query)
+    if Plunk::Elasticsearch.valid_json? query
       query
     else
       <<-END
