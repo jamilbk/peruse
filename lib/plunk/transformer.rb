@@ -3,7 +3,7 @@ require 'parslet'
 class Plunk::Transformer < Parslet::Transform
 
   rule(match: simple(:value)) do
-    ResultSet.new(query_string: "#{value}")
+    Plunk::ResultSet.new(query_string: "#{value}")
   end
 
   rule(
@@ -14,20 +14,20 @@ class Plunk::Transformer < Parslet::Transform
     },
     op: '=') do
 
-    rs = ResultSet.new(query_string: "#{field}:#{term}")
+    rs = Plunk::ResultSet.new(query_string: "#{field}:#{term}")
 
     json = JSON.parse rs.eval
-    values = Elasticsearch.extract_values json, extractors.to_s.split(',') 
+    values = Plunk::Elasticsearch.extract_values json, extractors.to_s.split(',') 
 
     if values.empty?
-      ResultSet.new
+      Plunk::ResultSet.new
     else
-      ResultSet.new(query_string: "(#{values.uniq.join(' OR ')})")
+      Plunk::ResultSet.new(query_string: "(#{values.uniq.join(' OR ')})")
     end
   end
 
   rule(field: simple(:field), value: simple(:value), op: '=') do
-    ResultSet.new(query_string: "#{field}:#{value}")
+    Plunk::ResultSet.new(query_string: "#{field}:#{value}")
   end
 
   rule(
@@ -55,7 +55,7 @@ class Plunk::Transformer < Parslet::Transform
 
     end_time = Time.now.utc.to_datetime
 
-    ResultSet.new(
+    Plunk::ResultSet.new(
       query_string: query,
       start_time: start_time,
       end_time: end_time)
