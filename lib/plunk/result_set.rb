@@ -27,12 +27,12 @@ class Plunk::ResultSet
   end
 
   def join(rs)
-    ResultSet.new("[ #{@query} * #{rs.query} ]")
+    Plunk::ResultSet.new("[ #{@query} * #{rs.query} ]")
   end
 
-  def eval
+  def eval(elasticsearch_recursor)
     return unless @query
-    Elasticsearch.search(@query.to_json)
+    elasticsearch_recursor.search(@query.to_json)
   end
 end
 

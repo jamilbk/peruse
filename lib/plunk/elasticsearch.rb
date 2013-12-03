@@ -20,7 +20,7 @@ class Plunk::Elasticsearch
     result = JSON.parse(RestClient.get(uri))
 
     @fields = {}
-    Plunk::Elasticsearch.nested_values(result, 'properties')
+    nested_values(result, 'properties')
 
     @fields
   end
@@ -39,14 +39,14 @@ class Plunk::Elasticsearch
   #
   # UTILITY METHODS
   #
-  def self.search(query)
+  def search(query)
     uri = URI.escape "#{@endpoint}/_search?size=#{@size}"
 
     RestClient.post uri, build_ES_query(query)
   end
 
   # returns all values for all occurences of the given nested key
-  def self.nested_values(hash, key)
+  def nested_values(hash, key)
     hash.each do |k, v|
       if k == key
         @fields.merge! v
