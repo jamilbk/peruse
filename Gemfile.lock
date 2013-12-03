@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    plunk (0.0.0)
+    plunk (0.0.5)
+      active_support
       json
       parslet
       rest-client
@@ -9,6 +10,9 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    active_support (3.0.0)
+      activesupport (= 3.0.0)
+    activesupport (3.0.0)
     blankslate (2.1.2.4)
     diff-lcs (1.2.5)
     json (1.8.1)

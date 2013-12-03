@@ -1,5 +1,3 @@
-require_relative 'elasticsearch'
-
 class Plunk::ResultSet
   attr_accessor :query
 
@@ -7,7 +5,7 @@ class Plunk::ResultSet
     if opts
       @query = { query: { }}
       
-      if opts[:query_string]
+      if @query_string = opts[:query_string]
         @query[:query][:query_string] = { query: opts[:query_string] }
       end
 
@@ -22,12 +20,8 @@ class Plunk::ResultSet
     end
   end
 
-  def *(rs)
-    self.join(rs)
-  end
-
-  def join(rs)
-    Plunk::ResultSet.new("[ #{@query} * #{rs.query} ]")
+  def raw_query
+    @query_string
   end
 
   def eval(elasticsearch_recursor)
@@ -35,4 +29,3 @@ class Plunk::ResultSet
     elasticsearch_recursor.search(@query.to_json)
   end
 end
-
