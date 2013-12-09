@@ -57,7 +57,7 @@ class Plunk::Elasticsearch
   end
 
   # nested field matcher
-  def extract_values(hash, keys)
+  def self.extract_values(hash, keys)
     @vals ||= []
 
     hash.each_pair do |k, v|

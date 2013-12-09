@@ -1,6 +1,25 @@
 require 'spec_helper'
 
 describe 'nested searches' do
+  before :all do
+    fake_results = {
+      foo: 'bar',
+      baz: 5,
+      arr: [ 0, 1, 2, 3 ],
+      '@timestamp' => Time.now
+    }.to_json
+    Plunk::ResultSet.any_instance.stub(:eval).and_return(fake_results)
+  end
+
+  it 'should transform' do
+    results = @transformer.apply @parser.parse('foo=`bar=baz|baz`')
+    expect(results.query).to eq({
+      query: {
+        query_string: {
+          query: 'foo:(5)'
+    }}})
+  end
+
   it 'should parse a nested basic search' do
     @parsed = @parser.parse 'tshark.len = ` 226 | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
