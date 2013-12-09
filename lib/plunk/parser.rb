@@ -19,7 +19,7 @@ class Plunk::Parser < Parslet::Parser
   # Field / value
   rule(:identifier) { match['_@a-zA-Z.'].repeat(1) }
   rule(:wildcard)   { match('[a-zA-Z0-9.*]').repeat(1) }
-  rule(:searchop)   { match('[=]').as(:op) >> space? }
+  rule(:searchop)   { match('[=]').as(:op) }
 
   # boolean operators search
   rule(:concatop)   { (str('OR') | str('AND')) >> space? }
@@ -30,13 +30,18 @@ class Plunk::Parser < Parslet::Parser
 
   # Grammar parts
   rule(:rhs) {
-      (regex | wildcard | integer | subsearch |
-        (lparen >> (space? >> (wildcard | integer) >>
-          (space >> concatop).maybe).repeat(1) >> rparen))
+      regexp | subsearch | integer | wildcard |
+       (lparen >> (space? >> (wildcard | integer) >>
+         (space >> concatop).maybe).repeat(1) >> rparen).maybe
   }
 
-  rule(:regex) {
+  rule(:regexp) {
     str('/') >> match('[^/]').repeat >> str('/')
+  }
+
+  rule(:last) {
+    str("last") >> space >> timerange.as(:timerange) >> (space >>
+    search.as(:search)).maybe
   }
 
   rule(:search) {
@@ -44,13 +49,8 @@ class Plunk::Parser < Parslet::Parser
       rhs.as(:value) | rhs.as(:match)
   }
 
-  rule(:last) {
-    str("last") >> space >> timerange.as(:timerange) >> space >>
-    search.as(:search)
-  }
-
   rule(:binaryop) {
-    (paren | search).as(:left) >> space? >> operator >> job.as(:right)
+    (search | paren).as(:left) >> space? >> operator >> job.as(:right)
   }
 
   rule(:subsearch) {
@@ -58,12 +58,9 @@ class Plunk::Parser < Parslet::Parser
   }
 
   rule(:nested_search) {
-    match('[^|]').repeat.as(:term) >> str('|') >> space? >>
+    match('[^|]').repeat.as(:initial_query) >> str('|') >> space? >>
     match('[^`]').repeat.as(:extractors)
-  }
-
-  rule(:joined_search) {
-    
+    # job >> str('|') >> space? >>
   }
 
   rule(:paren) {
@@ -71,7 +68,7 @@ class Plunk::Parser < Parslet::Parser
   }
 
   rule(:job) {
-    binaryop | paren | last | search
+    last | search | binaryop | paren
   }
 
   # root :job
