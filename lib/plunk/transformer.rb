@@ -32,6 +32,35 @@ class Plunk::Transformer < Parslet::Transform
   end
 
   rule(
+    timerange: {
+      quantity: simple(:quantity),
+      quantifier: simple(:quantifier)
+    }) do
+
+    int_quantity = quantity.to_s.to_i
+
+    start_time =
+      case quantifier
+      when 's'
+        int_quantity.seconds.ago
+      when 'm'
+        int_quantity.minutes.ago
+      when 'h'
+        int_quantity.hours.ago
+      when 'd'
+        int_quantity.days.ago
+      when 'w'
+        int_quantity.weeks.ago
+      end
+
+    end_time = Time.now
+
+    Plunk::ResultSet.new(
+      start_time: start_time,
+      end_time: end_time)
+  end
+
+  rule(
     search: simple(:result_set),
     timerange: {
       quantity: simple(:quantity),

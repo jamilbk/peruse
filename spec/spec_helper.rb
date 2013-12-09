@@ -3,6 +3,7 @@ require 'plunk'
 require 'plunk/parser'
 require 'plunk/transformer'
 require 'plunk/result_set'
+require 'plunk/elasticsearch'
 require 'parslet/rig/rspec'
 
 # Print ascii_tree when exception occurs
