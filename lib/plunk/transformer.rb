@@ -57,8 +57,8 @@ class Plunk::Transformer < Parslet::Transform
     end_time = Time.now
 
     Plunk::ResultSet.new(
-      start_time: start_time,
-      end_time: end_time)
+      start_time: start_time.utc.to_datetime.iso8601(3),
+      end_time: end_time.utc.to_datetime.iso8601(3))
   end
 
   rule(
@@ -88,8 +88,8 @@ class Plunk::Transformer < Parslet::Transform
 
     Plunk::ResultSet.new(
       query_string: result_set.raw_query,
-      start_time: start_time,
-      end_time: end_time)
+      start_time: start_time.utc.to_datetime.iso8601(3),
+      end_time: end_time.utc.to_datetime.iso8601(3))
   end
 end
 
