@@ -1,3 +1,5 @@
+# TODO: refactor this to speed up
+
 require 'json'
 require 'rest-client'
 

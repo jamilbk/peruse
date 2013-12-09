@@ -24,8 +24,7 @@ class Plunk::ResultSet
     @query_string
   end
 
-  def eval(elasticsearch_recursor)
-    return unless @query
-    elasticsearch_recursor.search(@query.to_json)
+  def eval(elasticsearch)
+    elasticsearch.search(@query.to_json) if @query
   end
 end
