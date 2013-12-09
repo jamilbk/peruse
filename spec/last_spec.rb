@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'the last command' do
   it 'should parse last 24h' do
     result = @transformer.apply @parser.parse('last 24h')
-    puts "QUERY: #{result.query}"
     expect(result.query.to_s).to eq({
       query: {
         range: {
@@ -57,7 +56,7 @@ describe 'the last command' do
     }}}}.to_s)
   end
 
-  it 'should parse foo=bar last 1h' do
+  it 'should parse last 1h foo=bar' do
     result = @transformer.apply @parser.parse('last 1h foo=bar')
     expect(result.query.to_s).to eq({
       query: {

@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe 'nested searches' do
-  before :all do
+  before :each do
     fake_results = {
       foo: 'bar',
       baz: 5,
       arr: [ 0, 1, 2, 3 ],
-      '@timestamp' => Time.now
+      '@timestamp' => Time.now.utc.iso8601(3)
     }.to_json
     Plunk::ResultSet.any_instance.stub(:eval).and_return(fake_results)
   end
