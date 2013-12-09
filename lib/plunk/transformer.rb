@@ -18,7 +18,7 @@ class Plunk::Transformer < Parslet::Transform
     # recursively apply nested query
     result_set = Plunk::Transformer.new.apply(initial_query)
 
-    json = JSON.parse result_set.eval
+    json = JSON.parse result_set.eval @@elasticsearch
     values = Plunk::Elasticsearch.extract_values json, extractors.to_s.split(',') 
 
     if values.empty?
