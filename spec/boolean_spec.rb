@@ -7,9 +7,9 @@ describe 'boolean searches' do
   end
 
   it 'should parse a single field / value complex boolean expression' do
-    @parsed = @parser.parse 'ids.attackers=(bar OR car)'
-    expect(@parsed[:field].to_s).to eq 'ids.attackers'
-    expect(@parsed[:value].to_s).to eq '(bar OR car)'
+    @parsed = @parser.parse 'baz=(foo OR bar AND (bar OR fez))'
+    expect(@parsed[:field].to_s).to eq 'baz'
+    expect(@parsed[:value].to_s).to eq '(foo OR bar AND (bar OR fez))'
     expect(@parsed[:op].to_s).to eq '='
   end
 

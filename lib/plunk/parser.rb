@@ -1,6 +1,11 @@
 require 'parslet'
 
 class Plunk::Parser < Parslet::Parser
+
+  def parenthesized(atom)
+    lparen >> atom >> rparen
+  end
+
   # Single character rules
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
@@ -21,6 +26,8 @@ class Plunk::Parser < Parslet::Parser
   rule(:wildcard)   { match('[a-zA-Z0-9.*]').repeat(1) }
   rule(:searchop)   { match('[=]').as(:op) }
 
+  rule(:query_value) { wildcard | integer }
+
   # boolean operators search
   rule(:concatop)   { (str('OR') | str('AND')) >> space? }
   rule(:operator)   { match('[|]').as(:op) >> space? }
@@ -30,9 +37,19 @@ class Plunk::Parser < Parslet::Parser
 
   # Grammar parts
   rule(:rhs) {
-      regexp | subsearch | integer | wildcard |
-       (lparen >> (space? >> (wildcard | integer) >>
-         (space >> concatop).maybe).repeat(1) >> rparen).maybe
+    regexp | subsearch | integer | wildcard | booleanop
+  }
+
+  rule(:boolean_value) {
+    booleanparen | query_value
+  }
+
+  rule(:booleanop) {
+    boolean_value >> (space >> concatop >> boolean_value).repeat
+  }
+
+  rule(:booleanparen) {
+    lparen >> space? >> booleanop >> space? >> rparen
   }
 
   rule(:regexp) {
@@ -58,9 +75,9 @@ class Plunk::Parser < Parslet::Parser
   }
 
   rule(:nested_search) {
-    match('[^|]').repeat.as(:initial_query) >> str('|') >> space? >>
+    # match('[^|]').repeat.as(:initial_query) >> str('|') >> space? >>
+    job.as(:initial_query) >> space? >> str('|') >> space? >>
     match('[^`]').repeat.as(:extractors)
-    # job >> str('|') >> space? >>
   }
 
   rule(:paren) {

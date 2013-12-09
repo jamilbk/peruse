@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plunk (0.0.7)
+    plunk (0.0.8)
       activesupport
       json
       parslet
