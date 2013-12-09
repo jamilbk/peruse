@@ -10,20 +10,21 @@ class Plunk::Transformer < Parslet::Transform
   rule(
     field: simple(:field),
     value: {
-      term: simple(:term),
+      initial_query: subtree(:initial_query),
       extractors: simple(:extractors)
     },
     op: '=') do
 
-    rs = Plunk::ResultSet.new(query_string: "#{field}:#{term}")
+    # recursively apply nested query
+    result_set = Plunk::Transformer.new.apply(initial_query)
 
-    json = JSON.parse rs.eval
+    json = JSON.parse result_set.eval
     values = Plunk::Elasticsearch.extract_values json, extractors.to_s.split(',') 
 
     if values.empty?
       Plunk::ResultSet.new
     else
-      Plunk::ResultSet.new(query_string: "(#{values.uniq.join(' OR ')})")
+      Plunk::ResultSet.new(query_string: "#{field}:(#{values.uniq.join(' OR ')})")
     end
   end
 
