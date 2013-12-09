@@ -55,4 +55,18 @@ describe 'the last command' do
             lte: Time.now
     }}}}.to_s)
   end
+
+  it 'should parse foo=bar last 1h' do
+    result = @transformer.apply @parser.parse('last 1h foo=bar')
+    expect(result.query.to_s).to eq({
+      query: {
+        query_string: {
+          query: 'foo:bar'
+        },
+        range: {
+          '@timestamp' => {
+            gte: 1.hour.ago,
+            lte: Time.now
+    }}}}.to_s)
+  end
 end
