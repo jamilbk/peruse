@@ -51,12 +51,12 @@ describe 'the last command' do
     }}}}}}.to_s)
   end
 
-  it 'should parse last 1h foo=bar' do
-    result = @transformer.apply @parser.parse('last 1h foo=bar')
+  it 'should parse last 1h @fields.foo.@field=bar' do
+    result = @transformer.apply @parser.parse('last 1h @fields.foo.@field=bar')
     expect(result.query.to_s).to eq({query:{filtered:{
       query:{
         query_string: {
-          query: 'foo:bar'
+          query: '@fields.foo.field:bar'
       }},
       filter: {
         and: [
