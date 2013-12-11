@@ -43,7 +43,8 @@ class Plunk::Parser < Parslet::Parser
   }
 
   # Field / value
-  rule(:identifier) { match['_@a-zA-Z.'].repeat(1) }
+  # rule(:identifier) { match['_@a-zA-Z.'].repeat(1) }
+  rule(:identifier) { match('[^=\s]').repeat(1) }
   rule(:wildcard)   { match('[a-zA-Z0-9.*]').repeat(1) }
   rule(:searchop)   { match('[=]').as(:op) }
   rule(:query_value) { number | string | datetime | wildcard }
@@ -96,7 +97,6 @@ class Plunk::Parser < Parslet::Parser
   }
 
   rule(:nested_search) {
-    # match('[^|]').repeat.as(:initial_query) >> str('|') >> space? >>
     job.as(:initial_query) >> space? >> str('|') >> space? >>
     match('[^`]').repeat.as(:extractors)
   }
