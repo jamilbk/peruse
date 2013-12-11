@@ -20,13 +20,33 @@ class Plunk::Parser < Parslet::Parser
     str('-').maybe >> digit.repeat(1) >> str('.') >> digit.repeat(1) >> space?
   }
   rule(:number)     { integer | float }
+  rule(:datetime) {
+      # 1979-05-27T07:32:00Z
+    digit.repeat(4) >> str("-") >> 
+    digit.repeat(2) >> str("-") >> 
+    digit.repeat(2) >> str("T") >> 
+    digit.repeat(2) >> str(":") >> 
+    digit.repeat(2) >> str(":") >> 
+    digit.repeat(2) >> str("Z")
+  }
+  rule(:escaped_special) {
+    str("\\") >> match['0tnr"\\\\']
+  }
+
+  rule(:string_special) {
+    match['\0\t\n\r"\\\\']
+  }
+  rule(:string) {
+    str('"') >>
+    (escaped_special | string_special.absent? >> any).repeat >>
+    str('"')
+  }
 
   # Field / value
   rule(:identifier) { match['_@a-zA-Z.'].repeat(1) }
   rule(:wildcard)   { match('[a-zA-Z0-9.*]').repeat(1) }
   rule(:searchop)   { match('[=]').as(:op) }
-
-  rule(:query_value) { wildcard | integer }
+  rule(:query_value) { number | string | datetime | wildcard }
 
   # boolean operators search
   rule(:concatop)   { (str('OR') | str('AND')) >> space? }
@@ -37,7 +57,8 @@ class Plunk::Parser < Parslet::Parser
 
   # Grammar parts
   rule(:rhs) {
-    regexp | subsearch | integer | wildcard | booleanop
+    regexp | subsearch | booleanop
+    # regexp | subsearch | integer | wildcard | booleanop
   }
 
   rule(:boolean_value) {
