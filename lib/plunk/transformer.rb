@@ -137,7 +137,7 @@ class Plunk::Transformer < Parslet::Transform
     end_time = Time.now
 
     Plunk::ResultSet.new(
-      query_string: result_set.raw_query,
+      query_string: result_set.query_string,
       start_time: start_time.utc.to_datetime.iso8601(3),
       end_time: end_time.utc.to_datetime.iso8601(3))
   end

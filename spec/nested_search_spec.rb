@@ -13,11 +13,9 @@ describe 'nested searches' do
 
   it 'should transform' do
     results = @transformer.apply @parser.parse('foo=`bar=baz|baz`')
-    expect(results.query).to eq({
-      query: {
-        query_string: {
-          query: 'foo:(5)'
-    }}})
+    expect(results.query).to eq({query:{filtered:{query:{query_string:{
+      query: 'foo:(5)'
+    }}}}})
   end
 
   it 'should parse a nested basic search' do
