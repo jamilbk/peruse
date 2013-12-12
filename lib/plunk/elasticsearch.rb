@@ -81,30 +81,15 @@ class Plunk::Elasticsearch
   end
 
   def build_ES_validator(query)
-    if Plunk::Elasticsearch.valid_json? query
-      # Strip the top-level "query" paramter since ES doesn't expect it
-      JSON.parse(query)['query'].to_json
-    else
-      <<-END
-        { "filtered": {
-            "query": {
-              "query_string": {
-                "query": "#{query}"
-              }
-            }
+    {
+      filtered: {
+        query: {
+          query_string: {
+            query: query
           }
         }
-      END
-    end
-  end
-
-  def self.valid_json?(json)
-    begin
-      JSON.parse json
-      true
-    rescue JSON::ParserError
-      false
-    end
+      }
+    }.to_json
   end
 end
 
