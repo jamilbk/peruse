@@ -44,7 +44,7 @@ class Plunk::Elasticsearch
   def search(query)
     uri = URI.escape "#{@endpoint}/_search?size=#{@size}"
 
-    RestClient.post uri, build_ES_query(query)
+    RestClient.post uri, query
   end
 
   # returns all values for all occurences of the given nested key
@@ -86,24 +86,11 @@ class Plunk::Elasticsearch
       JSON.parse(query)['query'].to_json
     else
       <<-END
-        {
-          "query_string": {
-            "query": "#{query}"
-          }
-        }
-      END
-    end
-  end
-
-  def build_ES_query(query)
-    if Plunk::Elasticsearch.valid_json? query
-      query
-    else
-      <<-END
-        {
-          "query": {
-            "query_string": {
-              "query": "#{query}"
+        { "filtered": {
+            "query": {
+              "query_string": {
+                "query": "#{query}"
+              }
             }
           }
         }
