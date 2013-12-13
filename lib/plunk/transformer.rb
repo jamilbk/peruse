@@ -33,12 +33,11 @@ class Plunk::Transformer < Parslet::Transform
 
     end_time = Time.now
 
-
     # recursively apply nested query
     result_set = Plunk::Transformer.new.apply(initial_query)
 
     json = JSON.parse result_set.eval
-    values = Plunk::Elasticsearch.extract_values json, extractors.to_s.split(',') 
+    values = Plunk::Utils.extract_values json, extractors.to_s.split(',') 
 
     if values.empty?
       Plunk::ResultSet.new(
@@ -69,7 +68,7 @@ class Plunk::Transformer < Parslet::Transform
     result_set = Plunk::Transformer.new.apply(initial_query)
 
     json = JSON.parse result_set.eval
-    values = Plunk::Elasticsearch.extract_values json, extractors.to_s.split(',') 
+    values = Plunk::Utils.extract_values json, extractors.to_s.split(',') 
 
     if values.empty?
       Plunk::ResultSet.new
@@ -142,4 +141,3 @@ class Plunk::Transformer < Parslet::Transform
       end_time: end_time.utc.to_datetime.iso8601(3))
   end
 end
-
