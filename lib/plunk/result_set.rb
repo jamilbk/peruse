@@ -2,10 +2,6 @@ module Plunk
   class ResultSet
     attr_accessor :query, :query_string
 
-    def self.configure(&block)
-      class_eval(&block)
-    end
-
     def initialize(opts={})
       @query = { query: { filtered: {}}}
 
@@ -36,7 +32,10 @@ module Plunk
     end
 
     def eval
-      Plunk.elasticsearch_client.search(body: @query.to_json).to_json if @query
+      Plunk.elasticsearch_client.search(
+        body: @query.to_json,
+        size: Plunk.max_number_of_hits || 10
+      ).to_json if @query
     end
   end
 end
