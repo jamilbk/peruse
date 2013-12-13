@@ -1,11 +1,11 @@
 PATH
   remote: .
   specs:
-    plunk (0.1.5)
+    plunk (0.2.0)
       activesupport
+      elasticsearch
       json
       parslet
-      rest-client
 
 GEM
   remote: https://rubygems.org/
@@ -19,15 +19,23 @@ GEM
     atomic (1.1.14)
     blankslate (2.1.2.4)
     diff-lcs (1.2.5)
+    elasticsearch (0.4.3)
+      elasticsearch-api (= 0.4.3)
+      elasticsearch-transport (= 0.4.3)
+    elasticsearch-api (0.4.3)
+      multi_json
+    elasticsearch-transport (0.4.3)
+      faraday
+      multi_json
+    faraday (0.8.8)
+      multipart-post (~> 1.2.0)
     i18n (0.6.9)
     json (1.8.1)
-    mime-types (2.0)
     minitest (4.7.5)
     multi_json (1.8.2)
+    multipart-post (1.2.0)
     parslet (1.5.0)
       blankslate (~> 2.0)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
