@@ -1,6 +1,10 @@
 class Plunk::ResultSet
   attr_accessor :query, :query_string
 
+  def self.configure(&block)
+    class_eval(&block)
+  end
+
   def initialize(opts={})
     @query = { query: { filtered: {}}}
 
@@ -31,6 +35,6 @@ class Plunk::ResultSet
   end
 
   def eval
-    @@elasticsearch.search(@query.to_json) if @query
+    Plunk.elasticsearch.search(body: @query.to_json) if @query
   end
 end
