@@ -44,9 +44,9 @@ module Plunk
     }
 
     # Field / value
-    # rule(:identifier) { match['_@a-zA-Z.'].repeat(1) }
     rule(:identifier) { match('[^=\s]').repeat(1) }
-    rule(:wildcard)   { match('[a-zA-Z0-9.*]').repeat(1) }
+    # possible right-hand side values
+    rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
     rule(:searchop)   { match('[=]').as(:op) }
     rule(:query_value) { number | string | datetime | wildcard }
 

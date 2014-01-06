@@ -27,6 +27,12 @@ describe 'field / value searches' do
     expect(result.query).to eq({query:{filtered:{query:{query_string:{
       query: '_foo-barcr@5Y_+f!3*(name:bar'
     }}}}})
+  end
 
+  it 'should parse foo=bar-baz' do
+    result = @transformer.apply @parser.parse 'foo=bar-baz'
+    expect(result.query).to eq({query:{filtered:{query:{query_string:{
+      query: 'foo:bar-baz'
+    }}}}})
   end
 end
