@@ -124,5 +124,12 @@ module Plunk
       result_set_params.merge!(query_string: result_set.query_string)
       Plunk::ResultSet.new(result_set_params)
     end
+
+    # last 24h foo=bar baz=fez
+    rule(
+      sequence(:set)
+    ) do
+      Plunk::ResultSet.merge(set)
+    end
   end
 end
