@@ -33,6 +33,7 @@ module Plunk
 
   class Transformer < Parslet::Transform
 
+    # last 24h foo=bar
     rule(
       field: simple(:field),
       value: {
@@ -66,6 +67,7 @@ module Plunk
       ResultSet.new(query_string: "#{value}")
     end
 
+    # foo=`bar=baz|field1,field2,field3`
     rule(
       field: simple(:field),
       value: {
@@ -87,6 +89,7 @@ module Plunk
       end
     end
 
+    # foo=bar
     rule(field: simple(:field), value: simple(:value), op: '=') do
       ResultSet.new(query_string: "#{field}:#{value}")
     end
@@ -105,6 +108,7 @@ module Plunk
       Plunk::ResultSet.new(result_set_params)
     end
 
+    # last 24h
     rule(
       search: simple(:result_set),
       timerange: {

@@ -3,8 +3,6 @@ Plunk
 
 Human-friendly query language for Elasticsearch
 
-Currently assumes you're using Logstash to 
-
 ## Installation
 ```
 gem install plunk
