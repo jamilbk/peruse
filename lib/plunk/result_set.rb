@@ -37,5 +37,27 @@ module Plunk
         size: Plunk.max_number_of_hits || 10
       ).to_json if @query
     end
+
+    # merges multiple queries with implicit AND
+    def self.merge(result_sets)
+      base = result_sets.first
+
+      base.query[:query][:filtered][:filter] ||= {}
+      base.query[:query][:filtered][:filter][:and] ||= []
+
+      (1..result_sets.size-1).each do |i|
+        result_set = result_sets[i]
+
+        base.query[:query][:filtered][:filter][:and] <<
+          result_set.query[:query][:filtered][:query]
+
+        if result_set.query[:query][:filtered][:filter]
+          base.query[:query][:filtered][:filter][:and] +=
+            result_set.query[:query][:filtered][:filter][:and]
+        end
+      end
+
+      base
+    end
   end
 end
