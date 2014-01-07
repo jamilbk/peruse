@@ -22,7 +22,7 @@ module Plunk
     }
     rule(:number)     { integer | float }
     rule(:datetime) {
-        # 1979-05-27T07:32:00Z
+      # 1979-05-27T07:32:00Z
       digit.repeat(4) >> str("-") >> 
       digit.repeat(2) >> str("-") >> 
       digit.repeat(2) >> str("T") >> 
@@ -60,7 +60,6 @@ module Plunk
     # Grammar parts
     rule(:rhs) {
       regexp | subsearch | booleanop
-      # regexp | subsearch | integer | wildcard | booleanop
     }
 
     rule(:boolean_value) {
@@ -110,7 +109,6 @@ module Plunk
       last | search | binaryop | paren
     }
 
-    # root :job
     rule(:plunk_query) {
       job >> (space >> job).repeat
     }
