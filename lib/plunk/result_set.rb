@@ -40,24 +40,22 @@ module Plunk
 
     # merges multiple queries with implicit AND
     def self.merge(result_sets)
-      base = result_sets.first
+      first = result_sets.delete_at 0
 
-      base.query[:query][:filtered][:filter] ||= {}
-      base.query[:query][:filtered][:filter][:and] ||= []
+      first.query[:query][:filtered][:filter] ||= {}
+      first.query[:query][:filtered][:filter][:and] ||= []
 
-      (1..result_sets.size-1).each do |i|
-        result_set = result_sets[i]
-
-        base.query[:query][:filtered][:filter][:and] <<
+      result_sets.each do |result_set|
+        first.query[:query][:filtered][:filter][:and] <<
           result_set.query[:query][:filtered][:query]
 
         if result_set.query[:query][:filtered][:filter]
-          base.query[:query][:filtered][:filter][:and] +=
+          first.query[:query][:filtered][:filter][:and] +=
             result_set.query[:query][:filtered][:filter][:and]
         end
       end
 
-      base
+      first
     end
   end
 end
