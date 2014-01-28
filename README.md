@@ -3,6 +3,12 @@ Plunk
 
 Human-friendly query language for Elasticsearch
 
+## About
+
+Plunk is a ruby gem to take a human-friendly search command and translate it
+to something Elasticsearch understands. Currently it only supports a few
+commands, but the framework is in place
+
 ## Installation
 ```
 gem install plunk
@@ -31,7 +37,9 @@ Plunk.search 'foo.field = (bar OR baz)'
 ```
 
 
-## Translation:
+## Translation
+
+Plunk takes your command and translates
 
 ```last 24h _type=syslog```
 

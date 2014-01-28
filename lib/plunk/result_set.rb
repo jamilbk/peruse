@@ -13,7 +13,7 @@ module Plunk
         @query[:query][:filtered][:filter] = {
           and: [
             range: {
-              '@timestamp' => {
+              Plunk.timestamp_field => {
                 gte: opts[:start_time],
                 lte: opts[:end_time] }}]}
       else
@@ -24,7 +24,7 @@ module Plunk
         elsif opts[:start_time] and opts[:end_time]
           @query[:query][:filtered][:query] = {
             range: {
-              '@timestamp' => {
+              Plunk.timestamp_field => {
                 gte: opts[:start_time],
                 lte: opts[:end_time] }}}
         end

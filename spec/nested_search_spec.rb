@@ -6,13 +6,13 @@ describe 'nested searches' do
       foo: 'bar',
       baz: 5,
       arr: [ 0, 1, 2, 3 ],
-      '@timestamp' => Time.now.utc.iso8601(3)
+      :timestamp => Time.now.utc.iso8601(3)
     }.to_json
     Plunk::ResultSet.any_instance.stub(:eval).and_return(fake_results)
   end
 
   it 'should transform' do
-    results = @transformer.apply @parser.parse('foo=`bar=baz|baz`')
+    results = @transformer.apply @parser.parse('foo=`bar=baz|baz,fass,fdsd`')
     expect(results.query).to eq({query:{filtered:{query:{query_string:{
       query: 'foo:(5)'
     }}}}})

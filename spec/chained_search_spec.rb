@@ -13,7 +13,7 @@ describe 'chained searches' do
       filter: {
         and: [{
           range: {
-            '@timestamp' => {
+            :timestamp => {
               gte: 1.day.ago.utc.iso8601(3),
               lte: Time.now.utc.iso8601(3)
             }
