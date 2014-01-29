@@ -48,7 +48,7 @@ module Plunk
     # possible right-hand side values
     rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
     rule(:searchop)   { match('[=]').as(:op) }
-    rule(:query_value) { number | string | datetime | wildcard }
+    rule(:query_value) { string | wildcard | datetime | number }
 
     # boolean operators search
     rule(:concatop)   { (str('OR') | str('AND')) >> space? }

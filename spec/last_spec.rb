@@ -1,13 +1,18 @@
 require 'spec_helper'
+require 'shared/time_stubs'
+require 'shared/plunk_stubs'
 
 describe 'the last command' do
+  include_context "time stubs"
+  include_context "plunk stubs"
+
   it 'should parse last 24h' do
     result = @transformer.apply @parser.parse('last 24h')
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: 24.hours.ago.utc.to_datetime.iso8601(3),
-          lte: Time.now.utc.to_datetime.iso8601(3)
+          gte: @time - 24.hours,
+          lte: @time
     }}}}}}.to_s)
   end
 
@@ -16,8 +21,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: 24.days.ago.utc.to_datetime.iso8601(3),
-          lte: Time.now.utc.to_datetime.iso8601(3)
+          gte: @time - 24.days,
+          lte: @time
     }}}}}}.to_s)
   end
 
@@ -26,8 +31,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: 24.weeks.ago.utc.to_datetime.iso8601(3),
-          lte: Time.now.utc.to_datetime.iso8601(3)
+          gte: @time - 24.weeks,
+          lte: @time
     }}}}}}.to_s)
   end
 
@@ -36,8 +41,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: 24.seconds.ago.utc.to_datetime.iso8601(3),
-          lte: Time.now.utc.to_datetime.iso8601(3)
+          gte: @time - 24.seconds,
+          lte: @time
     }}}}}}.to_s)
   end
 
@@ -46,8 +51,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: 24.minutes.ago.utc.to_datetime.iso8601(3),
-          lte: Time.now.utc.to_datetime.iso8601(3)
+          gte: @time - 24.minutes,
+          lte: @time
     }}}}}}.to_s)
   end
 
@@ -62,8 +67,8 @@ describe 'the last command' do
         and: [
           range: {
             Plunk.timestamp_field => {
-              gte: 1.hour.ago.utc.to_datetime.iso8601(3),
-              lte: Time.now.utc.to_datetime.iso8601(3)
+              gte: @time - 1.hour,
+              lte: @time
     }}]}}}}.to_s)
   end
 end

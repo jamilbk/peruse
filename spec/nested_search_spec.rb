@@ -1,12 +1,17 @@
 require 'spec_helper'
+require 'shared/time_stubs'
+require 'shared/plunk_stubs'
 
 describe 'nested searches' do
+  include_context "time stubs"
+  include_context "plunk stubs"
+  
   before :each do
     fake_results = {
       foo: 'bar',
       baz: 5,
       arr: [ 0, 1, 2, 3 ],
-      :timestamp => Time.now.utc.iso8601(3)
+      :timestamp => @time
     }.to_json
     Plunk::ResultSet.any_instance.stub(:eval).and_return(fake_results)
   end
@@ -22,7 +27,7 @@ describe 'nested searches' do
     @parsed = @parser.parse 'tshark.len = ` 226 | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
     expect(@parsed[:op].to_s).to eq '='
-    expect(@parsed[:value][:initial_query][:match].to_s).to eq '226 '
+    expect(@parsed[:value][:initial_query][:match].to_s).to eq '226'
     expect(@parsed[:value][:extractors].to_s).to eq 'tshark.frame.time_epoch,tshark.ip.src'
   end
 
