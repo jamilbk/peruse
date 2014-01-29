@@ -11,7 +11,7 @@ describe 'nested searches' do
       foo: 'bar',
       baz: 5,
       arr: [ 0, 1, 2, 3 ],
-      :timestamp => @time
+      :timestamp => @time.utc.to_datetime.iso8601(3)
     }.to_json
     Plunk::ResultSet.any_instance.stub(:eval).and_return(fake_results)
   end

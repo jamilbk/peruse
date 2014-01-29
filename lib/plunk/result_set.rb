@@ -47,7 +47,7 @@ module Plunk
 
       result_sets.each do |result_set|
         first.query[:query][:filtered][:filter][:and] <<
-          result_set.query[:query][:filtered][:query]
+          result_set.query[:query][:filtered]
 
         if result_set.query[:query][:filtered][:filter]
           first.query[:query][:filtered][:filter][:and] +=

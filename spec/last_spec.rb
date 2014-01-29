@@ -11,8 +11,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: @time - 24.hours,
-          lte: @time
+          gte: (@time - 24.hours).utc.to_datetime.iso8601(3),
+          lte: @time.utc.to_datetime.iso8601(3)
     }}}}}}.to_s)
   end
 
@@ -21,8 +21,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: @time - 24.days,
-          lte: @time
+          gte: (@time - 24.days).utc.to_datetime.iso8601(3),
+          lte: @time.utc.to_datetime.iso8601(3)
     }}}}}}.to_s)
   end
 
@@ -31,8 +31,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: @time - 24.weeks,
-          lte: @time
+          gte: (@time - 24.weeks).utc.to_datetime.iso8601(3),
+          lte: @time.utc.to_datetime.iso8601(3)
     }}}}}}.to_s)
   end
 
@@ -41,8 +41,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: @time - 24.seconds,
-          lte: @time
+          gte: (@time - 24.seconds).utc.to_datetime.iso8601(3),
+          lte: @time.utc.to_datetime.iso8601(3)
     }}}}}}.to_s)
   end
 
@@ -51,8 +51,8 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{query:{
       range: {
         Plunk.timestamp_field => {
-          gte: @time - 24.minutes,
-          lte: @time
+          gte: (@time - 24.minutes).utc.to_datetime.iso8601(3),
+          lte: @time.utc.to_datetime.iso8601(3)
     }}}}}}.to_s)
   end
 
@@ -61,14 +61,14 @@ describe 'the last command' do
     expect(result.query.to_s).to eq({query:{filtered:{
       query:{
         query_string: {
-          query: '@fields.foo.field:bar'
+          query: '@fields.foo.@field:bar'
       }},
       filter: {
         and: [
           range: {
             Plunk.timestamp_field => {
-              gte: @time - 1.hour,
-              lte: @time
+              gte: (@time - 1.hour).utc.to_datetime.iso8601(3),
+              lte: @time.utc.to_datetime.iso8601(3)
     }}]}}}}.to_s)
   end
 end
