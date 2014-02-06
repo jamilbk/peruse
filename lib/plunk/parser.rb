@@ -75,7 +75,7 @@ module Plunk
     }
 
     rule(:regexp) {
-      str('/') >> match('[^/]').repeat >> str('/')
+      str('/') >> (str('\/') | match('[^/]')).repeat >> str('/')
     }
 
     rule(:last) {
