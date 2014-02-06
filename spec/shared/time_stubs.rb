@@ -1,6 +1,12 @@
+require 'timecop'
+
 shared_context "time stubs" do
-  before :each do
-    @time = Time.parse("11/11/2011 11:11")
-    Time.stub(:now).and_return(@time)
+  before do
+    Timecop.freeze(Time.local(2012))
+    @time = Time.now
+  end
+
+  after do
+    Timecop.return
   end
 end
