@@ -6,6 +6,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency  "elasticsearch"
   s.add_runtime_dependency  "activesupport"
   s.add_development_dependency "rspec"
+  s.add_development_dependency "timecop"
   s.summary                 = "Elasticsearch query language"
   s.description             = "Human-friendly query language for Elasticsearch"
   s.authors                 = ["Ram Mehta", "Jamil Bou Kheir"]
