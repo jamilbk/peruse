@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plunk (0.2.8)
+    plunk (0.2.9)
       activesupport
       elasticsearch
       json
