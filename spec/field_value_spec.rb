@@ -35,4 +35,11 @@ describe 'field / value searches' do
       query: 'foo:bar-baz'
     }}}}})
   end
+
+  it 'should parse foo=(NOT bar)' do
+    result = @transformer.apply @parser.parse 'foo=(NOT bar)'
+    expect(result.query).to eq({query:{filtered:{query:{query_string:{
+      query: 'foo:(NOT bar)'
+    }}}}})
+  end
 end

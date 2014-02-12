@@ -14,4 +14,29 @@ describe 'boolean searches' do
       query: '(foo OR (bar AND baz))'
     }}}}})
   end
+
+  pending 'should parse (foo=bar OR foo=bar)' do
+    result = @transformer.apply @parser.parse '(foo=bar OR foo=bar)'
+    expect(result.query).to eq({query:{filtered:{query:{query_string:{
+      query: '(foo:bar OR foo:bar)'
+    }}}}})
+  end
+
+  pending 'should parse foo=bar OR baz=fez' do
+    result = @transformer.apply @parser.parse 'foo=bar OR baz=fez'
+    expect(result.query).to eq({query:{filtered:{query:{
+      query_string:{
+        query: 'foo:bar OR baz:fez'
+      }},
+    }}})
+  end
+
+  pending 'should parse (foo=bar AND baz=fez) OR ham=cheese' do
+    result = @transformer.apply @parser.parse '(foo=bar AND baz=fez) OR ham=cheese'
+    expect(result.query).to eq({query:{filtered:{query:{
+      query_string:{
+        query: '(foo:bar AND baz:fez) OR ham:cheese'
+      }},
+    }}})
+  end
 end
