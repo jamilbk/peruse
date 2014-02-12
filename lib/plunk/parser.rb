@@ -44,14 +44,16 @@ module Plunk
     }
 
     # Field / value
-    rule(:identifier) { match('[^=\s]').repeat(1) }
+    rule(:identifier) { match('[^=\s)(|]').repeat(1) >> match('[^=\s]').repeat }
     # possible right-hand side values
     rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
     rule(:searchop)   { match('[=]').as(:op) }
+
     rule(:query_value) { string | wildcard | datetime | number }
 
     # boolean operators search
     rule(:concatop)   { (str('OR') | str('AND')) >> space? }
+    rule(:negateop)   { str('NOT') >> space? }
     rule(:operator)   { match('[|]').as(:op) >> space? }
     rule(:timerange)  {
       integer.as(:quantity) >> match('s|m|h|d|w').as(:quantifier)
@@ -63,13 +65,18 @@ module Plunk
     }
 
     rule(:boolean_value) {
-      booleanparen | query_value
+      booleanparen | (negateop.maybe >> query_value)
     }
 
+    # AND, OR
+    rule(:boolean_logic) {
+      space >> concatop >> boolean_value
+    }
+
+    # handles recursion for parentheses and values
     rule(:booleanop) {
-      boolean_value >> (space >> concatop >> boolean_value).repeat
+      boolean_value >> boolean_logic.repeat
     }
-
     rule(:booleanparen) {
       lparen >> space? >> booleanop >> space? >> rparen
     }
@@ -88,10 +95,6 @@ module Plunk
         rhs.as(:value) | rhs.as(:match)
     }
 
-    rule(:binaryop) {
-      (search | paren).as(:left) >> space? >> operator >> job.as(:right)
-    }
-
     rule(:subsearch) {
       str('`') >> space? >> nested_search >> str('`')
     }
@@ -106,7 +109,7 @@ module Plunk
     }
 
     rule(:job) {
-      last | search | binaryop | paren
+      last | search | paren
     }
 
     rule(:plunk_query) {
