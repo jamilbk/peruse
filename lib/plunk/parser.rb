@@ -113,7 +113,7 @@ module Plunk
     }
 
     rule(:plunk_query) {
-      job >> (space >> job).repeat
+      space? >> job >> (space >> job).repeat >> space?
     }
 
     root :plunk_query
