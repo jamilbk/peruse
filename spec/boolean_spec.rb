@@ -15,14 +15,14 @@ describe 'boolean searches' do
     }}}}})
   end
 
-  pending 'should parse (foo=bar OR foo=bar)' do
+  it 'should parse (foo=bar OR foo=bar)' do
     result = @transformer.apply @parser.parse '(foo=bar OR foo=bar)'
     expect(result.query).to eq({query:{filtered:{query:{query_string:{
       query: '(foo:bar OR foo:bar)'
     }}}}})
   end
 
-  pending 'should parse foo=bar OR baz=fez' do
+  it 'should parse foo=bar OR baz=fez' do
     result = @transformer.apply @parser.parse 'foo=bar OR baz=fez'
     expect(result.query).to eq({query:{filtered:{query:{
       query_string:{
@@ -31,12 +31,19 @@ describe 'boolean searches' do
     }}})
   end
 
-  pending 'should parse (foo=bar AND baz=fez) OR ham=cheese' do
+  it 'should parse (foo=bar AND baz=fez) OR ham=cheese' do
     result = @transformer.apply @parser.parse '(foo=bar AND baz=fez) OR ham=cheese'
     expect(result.query).to eq({query:{filtered:{query:{
       query_string:{
         query: '(foo:bar AND baz:fez) OR ham:cheese'
       }},
     }}})
+  end
+
+  it 'should parse foo=(NOT bar)' do
+    result = @transformer.apply @parser.parse 'foo=(NOT bar)'
+    expect(result.query).to eq({query:{filtered:{query:{query_string:{
+      query: 'foo:(NOT bar)'
+    }}}}})
   end
 end

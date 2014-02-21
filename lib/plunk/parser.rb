@@ -47,7 +47,7 @@ module Plunk
     rule(:identifier) { match('[^=\s)(|]').repeat(1) >> match('[^=\s]').repeat }
     # possible right-hand side values
     rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
-    rule(:searchop)   { match('[=]').as(:op) }
+    rule(:searchop)   { match['='].as(:op) }
 
     rule(:query_value) { string | wildcard | datetime | number }
 
@@ -65,7 +65,11 @@ module Plunk
     }
 
     rule(:boolean_value) {
-      booleanparen | (negateop.maybe >> query_value)
+      booleanparen | field_value | (negateop.maybe >> query_value)
+    }
+
+    rule(:field_value) {
+      identifier >> space? >> searchop >> space? >> query_value
     }
 
     # AND, OR
@@ -109,11 +113,11 @@ module Plunk
     }
 
     rule(:job) {
-      last | search | paren
+      paren | last | search
     }
 
     rule(:plunk_query) {
-      job >> (space >> job).repeat
+      job >> (space >> (concatop.maybe) >> job).repeat
     }
 
     root :plunk_query
