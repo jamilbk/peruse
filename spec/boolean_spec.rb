@@ -15,7 +15,7 @@ describe 'boolean searches' do
     }}}}})
   end
 
-  pending 'should parse (foo=bar OR foo=bar)' do
+  it 'should parse (foo=bar OR foo=bar)' do
     result = @transformer.apply @parser.parse '(foo=bar OR foo=bar)'
     expect(result.query).to eq({query:{filtered:{query:{query_string:{
       query: '(foo:bar OR foo:bar)'

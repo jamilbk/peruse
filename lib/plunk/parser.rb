@@ -45,8 +45,6 @@ module Plunk
     rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
     rule(:searchop)   { match('[=]').as(:op) }
 
-    rule(:query_value) { string | wildcard | datetime | number }
-
     # boolean operators search
     rule(:concatop)   { (str('OR') | str('AND')) >> space? }
     rule(:negateop)   { str('NOT') >> space? }
@@ -63,6 +61,8 @@ module Plunk
     rule(:boolean_value) {
       booleanparen | (negateop.maybe >> query_value)
     }
+
+    rule(:query_value) { string | wildcard | datetime | number }
 
     # AND, OR
     rule(:boolean_logic) {

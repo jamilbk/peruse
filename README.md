@@ -39,7 +39,8 @@ Plunk.search 'foo.field = (bar OR baz)'
 
 ## Translation
 
-Plunk takes your command and translates
+Plunk takes your command and translates it into JSON compatible with
+Elasticsearch's Query DSL.
 
 ```last 24h _type=syslog```
 
@@ -70,3 +71,7 @@ gets translated to:
   }
 }
 ```
+
+## Examples
+
+foo=(bar OR baz)
