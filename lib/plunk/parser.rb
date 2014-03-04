@@ -86,9 +86,12 @@ module Plunk
       search.as(:search)).maybe
     }
 
+    rule(:field_value) {
+      identifier.as(:field) >> space? >> searchop >> space? >> rhs.as(:value)
+    }
+
     rule(:search) {
-      identifier.as(:field) >> space? >> searchop >> space? >>
-        rhs.as(:value) | rhs.as(:match)
+      field_value | rhs.as(:match)
     }
 
     rule(:subsearch) {
