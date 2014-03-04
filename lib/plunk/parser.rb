@@ -58,8 +58,12 @@ module Plunk
       regexp | subsearch | booleanop
     }
 
+    rule(:boolean_component) {
+      field_value | regexp | subsearch | (negateop.maybe >> query_value)
+    }
+
     rule(:boolean_value) {
-      booleanparen | (negateop.maybe >> query_value)
+      booleanparen | boolean_component
     }
 
     rule(:query_value) { string | wildcard | datetime | number }
@@ -111,8 +115,12 @@ module Plunk
       last | search | paren
     }
 
+    rule(:another_job) {
+      space? >> concatop.maybe >> job
+    }
+
     rule(:plunk_query) {
-      space? >> job >> (space >> job).repeat >> space?
+      space? >> job >> another_job.repeat >> space?
     }
 
     root :plunk_query
