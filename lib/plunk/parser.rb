@@ -3,10 +3,6 @@ require 'parslet'
 module Plunk
   class Parser < Parslet::Parser
 
-    def parenthesized(atom)
-      lparen >> atom >> rparen
-    end
-
     # Single character rules
     rule(:lparen)     { str('(') >> space? }
     rule(:rparen)     { str(')') >> space? }
