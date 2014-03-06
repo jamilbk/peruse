@@ -16,14 +16,18 @@ describe 'boolean searches' do
   end
 
   it 'should parse (foo=bar OR foo=bar)' do
-    result = @transformer.apply @parser.parse '(foo=bar OR foo=bar)'
+    parsed = @parser.parse '(foo=bar OR foo=bar)'
+    puts parsed
+    result = @transformer.apply parsed
     expect(result.query).to eq({query:{filtered:{query:{query_string:{
       query: '(foo:bar OR foo:bar)'
     }}}}})
   end
 
   it 'should parse foo=bar OR baz=fez' do
-    result = @transformer.apply @parser.parse 'foo=bar OR baz=fez'
+    parsed = @parser.parse 'foo=bar OR baz=fez'
+    puts parsed
+    result = @transformer.apply parsed
     expect(result.query).to eq({query:{filtered:{query:{
       query_string:{
         query: 'foo:bar OR baz:fez'
@@ -32,7 +36,9 @@ describe 'boolean searches' do
   end
 
   it 'should parse (foo=bar AND baz=fez) OR ham=cheese' do
-    result = @transformer.apply @parser.parse '(foo=bar AND baz=fez) OR ham=cheese'
+    parsed = @parser.parse '(foo=bar AND baz=fez) OR ham=cheese'
+    puts parsed
+    result = @transformer.apply parsed
     expect(result.query).to eq({query:{filtered:{query:{
       query_string:{
         query: '(foo:bar AND baz:fez) OR ham:cheese'

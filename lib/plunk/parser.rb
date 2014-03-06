@@ -55,7 +55,7 @@ module Plunk
 
     # Grammar parts
     rule(:rhs) {
-      regexp | subsearch | booleanop
+      regexp | subsearch | query_value | booleanop
     }
 
     rule(:boolean_component) {
@@ -94,8 +94,12 @@ module Plunk
       identifier.as(:field) >> space? >> searchop >> space? >> rhs.as(:value)
     }
 
+    rule(:search_component) {
+      field_value# | rhs.as(:match)
+    }
+
     rule(:search) {
-      field_value | rhs.as(:match)
+      search_component >> (concatop >> search_component).repeat
     }
 
     rule(:subsearch) {
@@ -108,7 +112,7 @@ module Plunk
     }
 
     rule(:paren) {
-      lparen >> space? >> job >> space? >> rparen
+      lparen.as(:lparen) >> space? >> job >> space? >> rparen
     }
 
     rule(:job) {
