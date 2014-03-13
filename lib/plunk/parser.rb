@@ -66,17 +66,14 @@ module Plunk
     rule(:query_value) { string | wildcard | datetime | number }
     # Strings
 
-
     # Value-only
     rule(:value_only) {
       rhs.as(:value)
     }
-
     # Regexp
     rule(:regexp) {
       str('/') >> (str('\/') | match('[^/]')).repeat >> str('/')
     }
-
     # Last
     rule(:last) {
       str("last") >> space >> timerange.as(:timerange)
@@ -84,7 +81,6 @@ module Plunk
     rule(:timerange)  {
       integer.as(:quantity) >> match('s|m|h|d|w').as(:quantifier)
     }
-
     # Subsearch
     rule(:subsearch) {
       str('`') >> space? >> nested_search >> str('`')
@@ -93,7 +89,6 @@ module Plunk
       plunk_query.as(:initial_query) >> space? >> str('|') >> space? >>
       match('[^`]').repeat.as(:extractors)
     }
-
     rule(:command) {
       # value_only | field_value
       str('command') >> digit
