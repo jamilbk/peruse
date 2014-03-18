@@ -4,11 +4,15 @@ module Plunk
   class Parser < Parslet::Parser
 
     # Single character rules
-    rule(:lparen)     { str('(') }
-    rule(:rparen)     { str(')') }
+    rule(:lparen)     { str('(') >> space? }
+    rule(:rparen)     { str(')') >> space? }
     rule(:digit)      { match('[0-9]') }
     rule(:space)      { match('\s').repeat(1) }
     rule(:space?)     { space.maybe }
+
+    rule(:and_operator) { (str("and") | str("AND")) >> space? }
+    rule(:or_operator)  { (str("or") | str("OR"))  >> space? }
+    rule(:not_operator) { (str("not") | str("NOT")) >> space? }
 
     # Numbers
     rule(:integer)    { str('-').maybe >> digit.repeat(1) >> space? }
@@ -41,7 +45,7 @@ module Plunk
 
     # Booleans
     rule(:and_or)   { (str('OR') | str('AND') | str('or') | str('and')) }
-    rule(:negate)   { str('NOT') | str('not') }
+    rule(:negate)   { (str('NOT') | str('not')) >> space? }
 
 
 
@@ -90,35 +94,23 @@ module Plunk
       match('[^`]').repeat.as(:extractors)
     }
     rule(:command) {
-      # value_only | field_value
-      str('command') >> digit
+      (value_only | field_value).as(:command) >> space?
+      # (str('command') >> digit).as(:command) >> space?
     }
 
 
+    rule(:primary) { lparen >> or_operation >> rparen | command }
 
+    rule(:and_operation) { 
+      (primary.as(:left) >> and_operator >> 
+        ((not_operator >> and_operation.as(:not)) | and_operation).as(:right)).as(:and) | 
+      primary }
+      
+    rule(:or_operation)  { 
+      (and_operation.as(:left) >> or_operator >> 
+        ((not_operator >> or_operation.as(:not)) | or_operation).as(:right)).as(:or) | 
+      and_operation }
 
-
-
-
-    # COMMAND JOINING
-    rule(:boolean_value) {
-      booleanparen.as(:paren) |
-      command.as(:command) |
-      ((negate >> space).maybe.as(:negate) >> booleanop)#.as(:op)
-    }
-    rule(:boolean_logic) {
-      space >> and_or.as(:bool) >> space >> boolean_value
-    }
-    rule(:booleanop) {
-      boolean_value >> boolean_logic.repeat
-    }
-    rule(:booleanparen) {
-      lparen >> space? >> booleanop >> space? >> rparen
-    }
-    rule(:plunk_query) {
-      booleanop
-    }
-
-    root :plunk_query
+    root(:or_operation)
   end
 end

@@ -1,14 +1,13 @@
 require 'spec_helper'
-require 'shared/query_builder'
 
 describe 'boolean searches' do
-  include QueryBuilder
-
   it 'should parse (foo OR bar)' do
-    result = @transformer.apply @parser.parse '(foo OR bar)'
-    expected = filter_builder({
-      or: [ query_builder('foo'), query_builder('bar') ] })
-    expect(result.query).to eq(expected)
+    parsed = @parser.parse '(foo OR bar)'
+    result = @transformer.apply parsed
+    pp result
+    expected = Plunk::Helper.filter_builder({
+      or: [ Plunk::Helper.query_builder('foo'), Plunk::Helper.query_builder('bar') ] })
+    expect(Plunk::ResultSet.new(result).query).to eq(expected)
   end
 
   it 'should parse (foo OR (bar AND baz))' do

@@ -4,6 +4,37 @@ require 'active_support/core_ext'
 module Plunk
 
   class Helper
+    def self.query_builder(query_string)
+      {
+        query: {
+          query_string: {
+            query: query_string
+          }
+        }
+      }
+    end
+
+    def self.filter_builder(filter)
+      {
+        query: {
+          filtered: {
+            filter: filter
+          }
+        }
+      }
+    end
+
+    def self.range_builder(range_min, range_max)
+      {
+        range: {
+          :@timestamp => {
+            gte: range_min,
+            gte: range_max
+          }
+        }
+      }
+    end
+
     def self.time_query_to_timestamp(int_quantity, quantifier)
       case quantifier
       when 's'
@@ -33,125 +64,35 @@ module Plunk
 
   class Transformer < Parslet::Transform
 
-    # single command
-    rule(
-      command: simple(:command)
-    ) do
-      puts "COMMAND: #{command}"
-    end
-
-    rule([
-      { command: simple(:command) },
-      { negate: simple(:negate) },
-      { bool: simple(:bool), paren: subtree(:paren) },
-      { bool: simple(:bool), paren: subtree(:paren), negate: simple(:negate), command: simple(:command) }
-    ]) do
-      puts "ARRAY CAUGHT"
-    end
-
-
-
-
-
-
-
-    # last 24h foo=bar
-    rule(
+    rule(command: {
       field: simple(:field),
-      value: {
-        initial_query: subtree(:initial_query),
-        extractors: simple(:extractors)
-      },
-      op: '=',
-      timerange: {
-        quantity: simple(:quantity),
-        quantifier: simple(:quantifier)
-      }) do
-
-      int_quantity = quantity.to_s.to_i
-      start_time   = Plunk::Helper.time_query_to_timestamp(int_quantity, quantifier)
-      end_time     = Time.now
-
-      # recursively apply nested query
-      result_set = Plunk::Transformer.new.apply(initial_query)
-
-      json = JSON.parse result_set.eval
-      values = Plunk::Utils.extract_values json, extractors.to_s.split(',')
-
-      result_set_params = Plunk::Helper.time_range_hash(start_time, end_time)
-      if values.empty?
-        result_set_params.merge!(query_string: "#{field}:(#{values.uniq.join(' OR ')})",)
-      end
-      Plunk::ResultSet.new(result_set_params)
+      value: simple(:value)
+    }) do
+      Plunk::Helper.query_builder(
+        String(field) + ":" + String(value)
+      )
     end
 
-    rule(match: simple(:value)) do
-      ResultSet.new(query_string: "#{value}")
+    rule(command: { value: simple(:value) }) do
+      Plunk::Helper.query_builder(String(value))
     end
 
-    # foo=`bar=baz|field1,field2,field3`
-    rule(
-      field: simple(:field),
-      value: {
-        initial_query: subtree(:initial_query),
-        extractors: simple(:extractors)
-      },
-      op: '=') do
-
-      # recursively apply nested query
-      result_set = Transformer.new.apply(initial_query)
-
-      json = JSON.parse result_set.eval
-      values = Utils.extract_values json, extractors.to_s.split(',')
-
-      if values.empty?
-        ResultSet.new
-      else
-        ResultSet.new(query_string: "#{field}:(#{values.uniq.join(' OR ')})")
-      end
+    rule(:negate => simple(:not)) do
+      negate
     end
 
-    # foo=bar
-    rule(field: simple(:field), value: simple(:value), op: '=') do
-      ResultSet.new(query_string: "#{field}:#{value}")
+    rule(:or => {
+      left: subtree(:left),
+      right: subtree(:right)
+    }) do
+      { or: [left, right] }
     end
 
-    rule(
-      timerange: {
-        quantity: simple(:quantity),
-        quantifier: simple(:quantifier)
-      }) do
-
-      int_quantity = quantity.to_s.to_i
-      start_time   = Plunk::Helper.time_query_to_timestamp(int_quantity, quantifier)
-      end_time     = Time.now
-
-      result_set_params = Plunk::Helper.time_range_hash(start_time, end_time)
-      Plunk::ResultSet.new(result_set_params)
-    end
-
-    # last 24h
-    rule(
-      search: simple(:result_set),
-      timerange: {
-        quantity: simple(:quantity),
-        quantifier: simple(:quantifier)
-      }) do
-
-      int_quantity = quantity.to_s.to_i
-      start_time   = Plunk::Helper.time_query_to_timestamp(int_quantity, quantifier)
-      end_time     = Time.now
-
-      result_set_params = Plunk::Helper.time_range_hash(start_time, end_time)
-      result_set_params.merge!(query_string: result_set.query_string)
-      Plunk::ResultSet.new(result_set_params)
-    end
-
-    # last 24h foo=bar baz=fez
-    rule(
-      sequence(:set)
-    ) do
-      Plunk::ResultSet.merge(set)
+    rule(:and => {
+      left: subtree(:left),
+      right: subtree(:right)
+    }) do
+      { and: [left, right] }
     end
   end
 end

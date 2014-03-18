@@ -6,15 +6,11 @@ describe 'basic searches' do
       query: {
         filtered: {
           filter: {
-            and: [
-              {
-                query: {
-                  query_string: {
-                    query: expected
-                  }
-                }
+            query: {
+              query_string: {
+                query: expected
               }
-            ]
+            }
           }
         }
       }
@@ -34,22 +30,5 @@ describe 'basic searches' do
   it 'should parse (bar) ' do
     result = @transformer.apply @parser.parse('bar ')
     result.query.should eq(basic_builder('bar'))
-  end
-
-  it 'should parse refactor' do
-    require 'json'
-    to_parse = "not command1 or (command2 and not (command3 or command4)) and not command5"
-    parsed = @parser.parse(to_parse)
-    pp parsed
-    result = @transformer.apply parsed
-    puts result
-  end
-
-  it 'should parse stuff' do
-    to_parse = "command1"
-    parsed = @parser.parse(to_parse)
-    result = @transformer.apply parsed
-    # puts parsed
-    puts result
   end
 end
