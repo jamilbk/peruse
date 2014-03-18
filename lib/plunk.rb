@@ -1,5 +1,6 @@
 require 'elasticsearch'
 
+require 'plunk/helper'
 require 'plunk/utils'
 require 'plunk/parser'
 require 'plunk/transformer'

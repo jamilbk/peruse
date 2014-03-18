@@ -19,14 +19,10 @@ end
 RSpec.configure do |config|
   config.before :all do
     
-    # use wrapped parser to print better debugging info
-    @parser = Plunk::ParserWrapper.new
-    @transformer = Plunk::Transformer.new
-
     # configure test instance of Plunk to use wrapper parser
     Plunk.configure do |c|
-      c.transformer = @transformer
-      c.parser = @parser
+      c.parser = Plunk::ParserWrapper.new
+      c.transformer = Plunk::Transformer.new
     end
   end
 end

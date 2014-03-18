@@ -1,12 +1,10 @@
 require 'spec_helper'
 require 'shared/time_stubs'
 require 'shared/plunk_stubs'
-require 'shared/query_builder'
 
 describe 'the last command' do
   include_context "time stubs"
   include_context "plunk stubs"
-  include QueryBuilder
 
   it 'should parse last 24h' do
     result = @transformer.apply @parser.parse('last 24h')

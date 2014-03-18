@@ -1,8 +1,6 @@
 require 'spec_helper'
-require 'shared/query_builder'
 
 describe 'field / value searches' do
-  include QueryBuilder
 
   it 'should parse _foo.@bar=baz' do
     result = @transformer.apply @parser.parse('_foo.@bar=baz')

@@ -1,12 +1,10 @@
 require 'spec_helper'
 require 'shared/time_stubs'
 require 'shared/plunk_stubs'
-require 'shared/query_builder'
 
 describe 'chained searches' do
   include_context "time stubs"
   include_context "plunk stubs"
-  include QueryBuilder
 
   it 'should parse last 24h foo_type=bar baz="fez" host=27.224.123.110' do
     parsed = @parser.parse 'last 24h foo_type=bar baz="fez" host=27.224.123.110'

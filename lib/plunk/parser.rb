@@ -63,7 +63,7 @@ module Plunk
     # Field = Value
     rule(:field_value) {
       identifier.as(:field) >> space? >>
-      searchop.as(:op) >> space? >>
+      searchop >> space? >>
       (rhs.as(:value) | subsearch.as(:subsearch))
     }
 
@@ -99,24 +99,36 @@ module Plunk
     rule(:command) {
       (
         last        |
-        value_only  |
-        field_value
+        field_value |
+        value_only
       ).as(:command) >> space?
     }
 
 
     # QUERY JOINING
  
-    rule(:primary) { lparen >> or_operation >> rparen | command }
+    rule(:negated_command) {
+      (not_operator >> command.as(:not)) |
+      command
+    }
+    rule(:primary) { lparen >> or_operation >> rparen | negated_command }
 
+    rule(:negated_and) {
+      (not_operator >> and_operation.as(:not)) |
+      and_operation
+    }
     rule(:and_operation) { 
       (primary.as(:left) >> and_operator >> 
-        ((not_operator >> and_operation.as(:not)) | and_operation).as(:right)).as(:and) | 
+        negated_and.as(:right)).as(:and) | 
       primary }
       
+    rule(:negated_or) {
+      (not_operator >> or_operation.as(:not)) |
+      or_operation
+    }
     rule(:or_operation)  { 
       (and_operation.as(:left) >> or_operator >> 
-        ((not_operator >> or_operation.as(:not)) | or_operation).as(:right)).as(:or) | 
+        negated_or.as(:right)).as(:or) | 
       and_operation }
 
     root(:or_operation)
