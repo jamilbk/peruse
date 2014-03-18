@@ -1,24 +1,28 @@
 require 'spec_helper'
 
 describe 'regexp searches' do
+
   it 'should parse foo=/blah foo/' do
-    result = @transformer.apply @parser.parse('foo=/blah foo/')
-    expect(result.query).to eq({query:{filtered:{query:{query_string:{
-      query: 'foo:/blah foo/'
-    }}}}})
+    result = Plunk.search 'foo=/blah foo/'
+    expected = Plunk::Helper.filter_builder(
+      Plunk::Helper.query_builder('foo:/blah foo/')
+    )
+    expect(result).to eq(expected)
   end
 
   it 'should parse foo=/blah\/ foo/' do
-    result = @transformer.apply @parser.parse('foo=/blah\/ foo/')
-    expect(result.query).to eq({query:{filtered:{query:{query_string:{
-      query: 'foo:/blah\/ foo/'
-    }}}}})
+    result = Plunk.search 'foo=/blah\/ foo/'
+    expected = Plunk::Helper.filter_builder(
+      Plunk::Helper.query_builder('foo:/blah\/ foo/')
+    )
+    expect(result).to eq(expected)
   end
 
   it 'should parse foo=/blah\. foo/' do
-    result = @transformer.apply @parser.parse('foo=/blah\. foo/')
-    expect(result.query).to eq({query:{filtered:{query:{query_string:{
-      query: 'foo:/blah\. foo/'
-    }}}}})
+    result = Plunk.search 'foo=/blah\. foo/'
+    expected = Plunk::Helper.filter_builder(
+      Plunk::Helper.query_builder('foo:/blah\. foo/')
+    )
+    expect(result).to eq(expected)
   end
 end

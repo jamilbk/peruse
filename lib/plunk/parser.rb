@@ -3,14 +3,11 @@ require 'parslet'
 module Plunk
   class Parser < Parslet::Parser
 
-    def parenthesized(atom)
-      lparen >> atom >> rparen
-    end
+    # BUILDING BLOCKS
 
     # Single character rules
     rule(:lparen)     { str('(') >> space? }
     rule(:rparen)     { str(')') >> space? }
-    rule(:comma)      { str(',') >> space? }
     rule(:digit)      { match('[0-9]') }
     rule(:space)      { match('\s').repeat(1) }
     rule(:space?)     { space.maybe }
@@ -21,6 +18,8 @@ module Plunk
       str('-').maybe >> digit.repeat(1) >> str('.') >> digit.repeat(1) >> space?
     }
     rule(:number)     { integer | float }
+
+    # Dates
     rule(:datetime) {
       # 1979-05-27T07:32:00Z
       digit.repeat(4) >> str("-") >> 
@@ -30,10 +29,11 @@ module Plunk
       digit.repeat(2) >> str(":") >> 
       digit.repeat(2) >> str("Z")
     }
+
+    # Strings
     rule(:escaped_special) {
       str("\\") >> match['0tnr"\\\\']
     }
-
     rule(:string_special) {
       match['\0\t\n\r"\\\\']
     }
@@ -43,79 +43,97 @@ module Plunk
       str('"')
     }
 
-    # Field / value
+    # Booleans
+    rule(:and_operator) { (str('and') | str('AND') | str('&')) >> space? }
+    rule(:or_operator)  { (str('or') | str('OR') | str('|'))  >> space? }
+    rule(:not_operator) { (str('not') | str('NOT') | str('~')) >> space? }
+
+
+    # COMMANDS
+
+    # Command parts
     rule(:identifier) { match('[^=\s)(|]').repeat(1) >> match('[^=\s]').repeat }
-    # possible right-hand side values
-    rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
-    rule(:searchop)   { match('[=]').as(:op) }
-
+    rule(:wildcard)   {
+      (lparen >> wildcard >> rparen) |
+      match('[^=\s|)(]').repeat(1)
+    }
     rule(:query_value) { string | wildcard | datetime | number }
-
-    # boolean operators search
-    rule(:concatop)   { (str('OR') | str('AND')) >> space? }
-    rule(:negateop)   { str('NOT') >> space? }
-    rule(:operator)   { match('[|]').as(:op) >> space? }
-    rule(:timerange)  {
-      integer.as(:quantity) >> match('s|m|h|d|w').as(:quantifier)
-    }
-
-    # Grammar parts
+    rule(:searchop)   { match['='] }
     rule(:rhs) {
-      regexp | subsearch | booleanop
+      regexp | query_value
     }
 
-    rule(:boolean_value) {
-      booleanparen | (negateop.maybe >> query_value)
+    # Field = Value
+    rule(:field_value) {
+      identifier.as(:field) >> space? >>
+      searchop >> space? >>
+      (rhs.as(:value) | subsearch.as(:subsearch))
     }
 
-    # AND, OR
-    rule(:boolean_logic) {
-      space >> concatop >> boolean_value
+    # Value-only
+    rule(:value_only) {
+      rhs.as(:value)
     }
 
-    # handles recursion for parentheses and values
-    rule(:booleanop) {
-      boolean_value >> boolean_logic.repeat
-    }
-    rule(:booleanparen) {
-      lparen >> space? >> booleanop >> space? >> rparen
-    }
-
+    # Regexp
     rule(:regexp) {
       str('/') >> (str('\/') | match('[^/]')).repeat >> str('/')
     }
 
+    # Last
     rule(:last) {
-      str("last") >> space >> timerange.as(:timerange) >> (space >>
-      search.as(:search)).maybe
+      str('last') >>
+      space >>
+      integer.as(:quantity) >>
+      match('s|m|h|d|w').as(:quantifier)
     }
 
-    rule(:search) {
-      identifier.as(:field) >> space? >> searchop >> space? >>
-        rhs.as(:value) | rhs.as(:match)
-    }
-
+    # Subsearch
     rule(:subsearch) {
       str('`') >> space? >> nested_search >> str('`')
     }
-
     rule(:nested_search) {
-      job.as(:initial_query) >> space? >> str('|') >> space? >>
+      plunk_query.as(:initial_query) >> space? >> str('|') >> space? >>
       match('[^`]').repeat.as(:extractors)
     }
 
-    rule(:paren) {
-      lparen >> space? >> job >> space? >> rparen
+    # Reference your custom commands here to make them eligible for parsing
+    # NOTE: order matters!
+    rule(:command) {
+      (
+        last        |
+        field_value |
+        value_only
+      ).as(:command) >> space?
     }
 
-    rule(:job) {
-      last | search | paren
-    }
 
-    rule(:plunk_query) {
-      space? >> job >> (space >> job).repeat >> space?
+    # QUERY JOINING
+ 
+    rule(:negated_command) {
+      (not_operator >> command.as(:not)) |
+      command
     }
+    rule(:primary) { lparen >> or_operation >> rparen | negated_command }
 
-    root :plunk_query
+    rule(:negated_and) {
+      (not_operator >> and_operation.as(:not)) |
+      and_operation
+    }
+    rule(:and_operation) { 
+      (primary.as(:left) >> and_operator >> 
+        negated_and.as(:right)).as(:and) | 
+      primary }
+      
+    rule(:negated_or) {
+      (not_operator >> or_operation.as(:not)) |
+      or_operation
+    }
+    rule(:or_operation)  { 
+      (and_operation.as(:left) >> or_operator >> 
+        negated_or.as(:right)).as(:or) | 
+      and_operation }
+
+    root(:or_operation)
   end
 end

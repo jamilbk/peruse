@@ -1,5 +1,6 @@
 require 'elasticsearch'
 
+require 'plunk/helper'
 require 'plunk/utils'
 require 'plunk/parser'
 require 'plunk/transformer'
@@ -32,6 +33,10 @@ module Plunk
   end
 
   def self.search(query_string)
-    transformer.apply(parser.parse(query_string)).eval
+    ResultSet.new(
+      transformer.apply(
+        parser.parse(query_string)
+      )
+    ).eval
   end
 end
