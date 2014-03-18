@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name                    = "plunk"
-  s.version                 = "0.3.0"
+  s.version                 = "0.3.1"
   s.add_runtime_dependency  "json"
   s.add_runtime_dependency  "parslet"
   s.add_runtime_dependency  "elasticsearch"
@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "timecop"
   s.summary                 = "Elasticsearch query language"
   s.description             = "Human-friendly query language for Elasticsearch"
-  s.authors                 = ["Ram Mehta", "Jamil Bou Kheir"]
-  s.email                   = ["ram.mehta@gmail.com", "jamil@elbii.com"]
+  s.authors                 = ["Ram Mehta", "Jamil Bou Kheir", "Roman Heinrich"]
+  s.email                   = ["ram.mehta@gmail.com", "jamil@elbii.com", "roman.heinrich@gmail.com"]
   s.files                   = `git ls-files`.split("\n")
   s.homepage                = "https://github.com/elbii/plunk"
   s.license                 = "MIT"
