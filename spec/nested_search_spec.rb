@@ -16,14 +16,14 @@ describe 'nested searches' do
     Plunk::ResultSet.any_instance.stub(:eval).and_return(fake_results)
   end
 
-  it 'should transform' do
+  pending 'should transform' do
     results = @transformer.apply @parser.parse('foo=`bar=baz|baz,fass,fdsd`')
     expect(results.query).to eq({query:{filtered:{query:{query_string:{
       query: 'foo:(5)'
     }}}}})
   end
 
-  it 'should parse a nested basic search' do
+  pending 'should parse a nested basic search' do
     @parsed = @parser.parse 'tshark.len = ` 226 | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
     expect(@parsed[:op].to_s).to eq '='
@@ -31,7 +31,7 @@ describe 'nested searches' do
     expect(@parsed[:value][:extractors].to_s).to eq 'tshark.frame.time_epoch,tshark.ip.src'
   end
 
-  it 'should parse a nested regexp' do
+  pending 'should parse a nested regexp' do
     @parsed = @parser.parse 'tshark.len = ` cif.malicious_ips=/foo/ | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
     expect(@parsed[:op].to_s).to eq '='
@@ -41,7 +41,7 @@ describe 'nested searches' do
     expect(@parsed[:value][:extractors].to_s).to eq 'tshark.frame.time_epoch,tshark.ip.src'
   end
 
-  it 'should parse a nested basic boolean' do
+  pending 'should parse a nested basic boolean' do
     @parsed = @parser.parse 'tshark.len = `(foo OR bar) | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
     expect(@parsed[:op].to_s).to eq '='
@@ -49,7 +49,7 @@ describe 'nested searches' do
     expect(@parsed[:value][:extractors].to_s).to eq 'tshark.frame.time_epoch,tshark.ip.src'
   end
 
-  it 'should parse a nested field / value boolean' do
+  pending 'should parse a nested field / value boolean' do
     @parsed = @parser.parse 'tshark.len = `baz=(foo OR bar AND (bar OR fez)) | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
     expect(@parsed[:op].to_s).to eq '='
@@ -59,7 +59,7 @@ describe 'nested searches' do
     expect(@parsed[:value][:extractors].to_s).to eq 'tshark.frame.time_epoch,tshark.ip.src'
   end
 
-  it 'should parse a nested last standalone timerange' do
+  pending 'should parse a nested last standalone timerange' do
     @parsed = @parser.parse 'tshark.len = `last 24h | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
     expect(@parsed[:op].to_s).to eq '='
@@ -68,7 +68,7 @@ describe 'nested searches' do
     expect(@parsed[:value][:extractors].to_s).to eq 'tshark.frame.time_epoch,tshark.ip.src'
   end
 
-  it 'should parse a nested last timerange and field / value pair' do
+  pending 'should parse a nested last timerange and field / value pair' do
     @parsed = @parser.parse 'tshark.len = `last 24h foo=bar | tshark.frame.time_epoch,tshark.ip.src`'
     expect(@parsed[:field].to_s).to eq 'tshark.len'
     expect(@parsed[:op].to_s).to eq '='

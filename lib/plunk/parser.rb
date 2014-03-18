@@ -53,7 +53,10 @@ module Plunk
 
     # Command parts
     rule(:identifier) { match('[^=\s)(|]').repeat(1) >> match('[^=\s]').repeat }
-    rule(:wildcard)   { match('[^=\s|]').repeat(1) }
+    rule(:wildcard)   {
+      (lparen >> wildcard >> rparen) |
+      match('[^=\s|)(]').repeat(1)
+    }
     rule(:query_value) { string | wildcard | datetime | number }
     rule(:searchop)   { match['='] }
     rule(:rhs) {
