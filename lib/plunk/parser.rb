@@ -44,9 +44,9 @@ module Plunk
     }
 
     # Booleans
-    rule(:and_operator) { (str("and") | str("AND")) >> space? }
-    rule(:or_operator)  { (str("or") | str("OR"))  >> space? }
-    rule(:not_operator) { (str("not") | str("NOT")) >> space? }
+    rule(:and_operator) { (str('and') | str('AND') | str('&')) >> space? }
+    rule(:or_operator)  { (str('or') | str('OR') | str('|'))  >> space? }
+    rule(:not_operator) { (str('not') | str('NOT') | str('~')) >> space? }
 
 
     # COMMANDS

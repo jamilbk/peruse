@@ -13,6 +13,17 @@ describe 'boolean searches' do
     expect(result).to eq(expected)
   end
 
+  it 'should parse (foo | bar)' do
+    result = Plunk.search '(foo | bar)'
+    expected = Plunk::Helper.filter_builder({
+      or: [
+        Plunk::Helper.query_builder('foo'),
+        Plunk::Helper.query_builder('bar')
+      ]
+    })
+    expect(result).to eq(expected)
+  end
+
   it 'should parse (foo OR (bar AND baz))' do
     result = Plunk.search '(foo OR (bar AND baz))'
     expected = Plunk::Helper.filter_builder({
