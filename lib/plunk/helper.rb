@@ -25,7 +25,7 @@ module Plunk
     def self.range_builder(range_min, range_max)
       {
         range: {
-          :@timestamp => {
+          Plunk.timestamp_field => {
             gte: range_min,
             gte: range_max
           }
@@ -50,13 +50,6 @@ module Plunk
 
     def self.timestamp_format(time)
       time.utc.to_datetime.iso8601(3)
-    end
-
-    def self.time_range_hash(start_time, end_time)
-      {
-        start_time: timestamp_format(start_time),
-        end_time: timestamp_format(end_time)
-      }
     end
   end
 end

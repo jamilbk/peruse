@@ -18,6 +18,21 @@ module Plunk
       Helper.query_builder(String(value))
     end
 
+    rule(command: {
+      quantity: simple(:quantity),
+      quantifier: simple(:quantifier)
+    }) do
+      start_timestamp = Helper.time_query_to_timestamp(
+        Integer(quantity),
+        String(quantifier)
+      )
+
+      start_time = Helper.timestamp_format start_timestamp
+      end_time = Helper.timestamp_format(Time.now)
+
+      Helper.range_builder(start_time, end_time)
+    end
+
     rule(:negate => subtree(:not)) do
       { not: negate }
     end
