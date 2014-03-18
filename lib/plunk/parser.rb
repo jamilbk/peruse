@@ -134,6 +134,10 @@ module Plunk
         negated_or.as(:right)).as(:or) | 
       and_operation }
 
-    root(:or_operation)
+    rule(:plunk_query) {
+      space? >> or_operation >> space?
+    }
+
+    root(:plunk_query)
   end
 end

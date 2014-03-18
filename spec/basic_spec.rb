@@ -33,9 +33,7 @@ describe 'basic searches' do
   end
 
   it 'should parse  bar ' do
-    result = @transformer.apply @parser.parse(' bar ')
-    result.query.should eq({query:{filtered:{query:{query_string:{
-      query: 'bar'
-    }}}}})
+    result = Plunk.search ' bar '
+    result.should eq(basic_builder('bar'))
   end
 end
