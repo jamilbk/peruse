@@ -102,15 +102,15 @@ module Plunk
 
     # COMMAND JOINING
     rule(:boolean_value) {
-      booleanparen |
+      booleanparen.as(:paren) |
       command.as(:command) |
-      ((negate >> space).maybe.as(:not) >> booleanop)
+      ((negate >> space).maybe.as(:negate) >> booleanop)#.as(:op)
     }
     rule(:boolean_logic) {
-      space >> and_or.as(:and_or) >> space >> boolean_value
+      space >> and_or.as(:bool) >> space >> boolean_value
     }
     rule(:booleanop) {
-      boolean_value >> boolean_logic.as(:logic).repeat
+      boolean_value >> boolean_logic.repeat
     }
     rule(:booleanparen) {
       lparen >> space? >> booleanop >> space? >> rparen

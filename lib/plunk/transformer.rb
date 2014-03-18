@@ -33,6 +33,28 @@ module Plunk
 
   class Transformer < Parslet::Transform
 
+    # single command
+    rule(
+      command: simple(:command)
+    ) do
+      puts "COMMAND: #{command}"
+    end
+
+    rule([
+      { command: simple(:command) },
+      { negate: simple(:negate) },
+      { bool: simple(:bool), paren: subtree(:paren) },
+      { bool: simple(:bool), paren: subtree(:paren), negate: simple(:negate), command: simple(:command) }
+    ]) do
+      puts "ARRAY CAUGHT"
+    end
+
+
+
+
+
+
+
     # last 24h foo=bar
     rule(
       field: simple(:field),
