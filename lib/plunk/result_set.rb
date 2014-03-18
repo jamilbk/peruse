@@ -8,9 +8,9 @@ module Plunk
 
     def eval
       Plunk.elasticsearch_client.search(
-        body: @query.to_json,
+        body: @query,
         size: Plunk.max_number_of_hits || 10
-      ).to_json if @query
+      ) if @query
     end
   end
 end

@@ -1,6 +1,7 @@
 require 'rspec'
 require 'plunk'
 require 'parslet/rig/rspec'
+require 'shared/dummy_client'
 
 # Print ascii_tree when exception occurs
 module Plunk
@@ -27,8 +28,5 @@ RSpec.configure do |config|
       c.transformer = @transformer
       c.parser = @parser
     end
-
-    # just return the built query, don't execute against Elasticsearch
-    Plunk::ResultSet.stub(:eval).and_return(:query)
   end
 end
