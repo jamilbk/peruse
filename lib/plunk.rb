@@ -32,6 +32,10 @@ module Plunk
   end
 
   def self.search(query_string)
-    transformer.apply(parser.parse(query_string)).eval
+    ResultSet.new(
+      transformer.apply(
+        parser.parse(query_string)
+      )
+    ).eval
   end
 end

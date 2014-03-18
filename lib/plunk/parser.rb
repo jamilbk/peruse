@@ -3,6 +3,8 @@ require 'parslet'
 module Plunk
   class Parser < Parslet::Parser
 
+    # BUILDING BLOCKS
+
     # Single character rules
     rule(:lparen)     { str('(') >> space? }
     rule(:rparen)     { str(')') >> space? }
@@ -10,16 +12,14 @@ module Plunk
     rule(:space)      { match('\s').repeat(1) }
     rule(:space?)     { space.maybe }
 
-    rule(:and_operator) { (str("and") | str("AND")) >> space? }
-    rule(:or_operator)  { (str("or") | str("OR"))  >> space? }
-    rule(:not_operator) { (str("not") | str("NOT")) >> space? }
-
     # Numbers
     rule(:integer)    { str('-').maybe >> digit.repeat(1) >> space? }
     rule(:float)      {
       str('-').maybe >> digit.repeat(1) >> str('.') >> digit.repeat(1) >> space?
     }
     rule(:number)     { integer | float }
+
+    # Dates
     rule(:datetime) {
       # 1979-05-27T07:32:00Z
       digit.repeat(4) >> str("-") >> 
@@ -44,47 +44,47 @@ module Plunk
     }
 
     # Booleans
-    rule(:and_or)   { (str('OR') | str('AND') | str('or') | str('and')) }
-    rule(:negate)   { (str('NOT') | str('not')) >> space? }
-
-
-
-
-
+    rule(:and_operator) { (str("and") | str("AND")) >> space? }
+    rule(:or_operator)  { (str("or") | str("OR"))  >> space? }
+    rule(:not_operator) { (str("not") | str("NOT")) >> space? }
 
 
     # COMMANDS
 
-    # field = value
+    # Command parts
+    rule(:identifier) { match('[^=\s)(|]').repeat(1) >> match('[^=\s]').repeat }
+    rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
+    rule(:query_value) { string | wildcard | datetime | number }
+    rule(:searchop)   { match['='] }
+    rule(:rhs) {
+      regexp | query_value
+    }
+
+    # Field = Value
     rule(:field_value) {
       identifier.as(:field) >> space? >>
       searchop.as(:op) >> space? >>
       (rhs.as(:value) | subsearch.as(:subsearch))
     }
-    rule(:searchop)   { match['='] }
-    rule(:rhs) {
-      regexp | query_value
-    }
-    rule(:identifier) { match('[^=\s)(|]').repeat(1) >> match('[^=\s]').repeat }
-    rule(:wildcard)   { match('[^=\s)(|]').repeat(1) }
-    rule(:query_value) { string | wildcard | datetime | number }
-    # Strings
 
     # Value-only
     rule(:value_only) {
       rhs.as(:value)
     }
+
     # Regexp
     rule(:regexp) {
       str('/') >> (str('\/') | match('[^/]')).repeat >> str('/')
     }
+
     # Last
     rule(:last) {
-      str("last") >> space >> timerange.as(:timerange)
+      str('last') >>
+      space >>
+      integer.as(:quantity) >>
+      match('s|m|h|d|w').as(:quantifier)
     }
-    rule(:timerange)  {
-      integer.as(:quantity) >> match('s|m|h|d|w').as(:quantifier)
-    }
+
     # Subsearch
     rule(:subsearch) {
       str('`') >> space? >> nested_search >> str('`')
@@ -93,12 +93,20 @@ module Plunk
       plunk_query.as(:initial_query) >> space? >> str('|') >> space? >>
       match('[^`]').repeat.as(:extractors)
     }
+
+    # Reference your custom commands here to make them eligible for parsing
+    # NOTE: order matters!
     rule(:command) {
-      (value_only | field_value).as(:command) >> space?
-      # (str('command') >> digit).as(:command) >> space?
+      (
+        last        |
+        value_only  |
+        field_value
+      ).as(:command) >> space?
     }
 
 
+    # QUERY JOINING
+ 
     rule(:primary) { lparen >> or_operation >> rparen | command }
 
     rule(:and_operation) { 
