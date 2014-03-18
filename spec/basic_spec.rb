@@ -28,7 +28,7 @@ describe 'basic searches' do
   end
 
   it 'should parse (bar) ' do
-    result = @transformer.apply @parser.parse('bar ')
-    result.query.should eq(basic_builder('bar'))
+    result = Plunk.search '(bar) '
+    result.should eq(basic_builder('bar'))
   end
 end
