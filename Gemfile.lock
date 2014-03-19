@@ -2,10 +2,10 @@ PATH
   remote: .
   specs:
     plunk (0.3.1)
-      activesupport
-      elasticsearch
-      json
-      parslet
+      activesupport (~> 4.0, >= 4.0.0)
+      elasticsearch (~> 0.4, >= 0.4.3)
+      json (~> 1.8, >= 1.8.0)
+      parslet (~> 1.5, >= 1.5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -54,5 +54,5 @@ PLATFORMS
 
 DEPENDENCIES
   plunk!
-  rspec
-  timecop
+  rspec (~> 2.0, >= 2.14.1)
+  timecop (~> 0.7, >= 0.7.1)
