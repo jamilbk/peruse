@@ -41,4 +41,12 @@ describe 'field / value searches' do
     )
     expect(result).to eq(expected)
   end
+
+  it 'should parse !src_ip=0.0.0.0' do
+    result = Plunk.search '!src_ip=0.0.0.0'
+    expected = Plunk::Helper.filter_builder(
+      Plunk::Helper.query_builder('!src_ip:0.0.0.0')
+    )
+    expect(result).to eq(expected)
+  end
 end
