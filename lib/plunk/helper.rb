@@ -35,7 +35,7 @@ module Plunk
         range: {
           Plunk.timestamp_field => {
             gte: range_min,
-            gte: range_max
+            lte: range_max
           }
         }
       }
