@@ -41,6 +41,15 @@ module Plunk
       }
     end
 
+    def self.regexp_builder(field, regexp, flags=nil)
+      {
+        regexp: {
+          field => regexp,
+          flags: flags || 'ALL'
+        }
+      }
+    end
+
     def self.time_query_to_timestamp(int_quantity, quantifier)
       case quantifier
       when 's'

@@ -12,6 +12,16 @@ module Plunk
       )
     end
 
+    # Regexp
+    rule(command: {
+      field: simple(:field),
+      value: {
+        regexp: simple(:regexp)
+      }
+    }) do
+      Helper.regexp_builder(String(field), String(regexp))
+    end
+
     # Value-only
     rule(command: { value: simple(:value) }) do
       Helper.query_builder(String(value))
