@@ -15,8 +15,8 @@ Elasticsearch offers.
 gem install plunk
 ```
 
-Plunk uses (Parslet)[https://github.com/kschiess/parslet] to first parse your
-query, and then (Elasticsearch's official ruby library)[https://github.com/elasticsearch/elasticsearch-ruby]
+Plunk uses [Parslet](https://github.com/kschiess/parslet) to first parse your
+query, and then [Elasticsearch's official ruby library](https://github.com/elasticsearch/elasticsearch-ruby)
 to send it to Elasticsearch.
 
 ## Usage
