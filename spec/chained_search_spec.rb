@@ -14,13 +14,9 @@ describe 'chained searches' do
           (@time - 24.hours).utc.to_datetime.iso8601(3),
           @time.utc.to_datetime.iso8601(3)
         ),
-        { and: [
-          Plunk::Helper.query_builder('foo_type:bar'),
-          { and: [
-            Plunk::Helper.query_builder('baz:"fez"'),
-            Plunk::Helper.query_builder('host:27.224.123.110')
-          ]}
-        ]}
+        Plunk::Helper.query_builder('foo_type:bar'),
+        Plunk::Helper.query_builder('baz:"fez"'),
+        Plunk::Helper.query_builder('host:27.224.123.110')
       ]
     })
     expect(result).to eq(expected)
@@ -34,13 +30,9 @@ describe 'chained searches' do
           (@time - 24.hours).utc.to_datetime.iso8601(3),
           @time.utc.to_datetime.iso8601(3)
         ),
-        { and: [
-          Plunk::Helper.query_builder('foo_type:bar'),
-          { and: [
-            Plunk::Helper.query_builder('baz:"fez"'),
-            Plunk::Helper.query_builder('host:27.224.123.110')
-          ]}
-        ]}
+        Plunk::Helper.query_builder('foo_type:bar'),
+        Plunk::Helper.query_builder('baz:"fez"'),
+        Plunk::Helper.query_builder('host:27.224.123.110')
       ]
     })
     expect(result).to eq(expected)

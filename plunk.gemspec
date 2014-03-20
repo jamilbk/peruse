@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name                    = "plunk"
-  s.version                 = "0.3.1"
+  s.version                 = "0.3.2"
   s.add_runtime_dependency  "json", "~> 1.8", ">= 1.8.0"
   s.add_runtime_dependency  "parslet", "~> 1.5", ">= 1.5.0"
   s.add_runtime_dependency  "elasticsearch", "~> 0.4", ">= 0.4.3"

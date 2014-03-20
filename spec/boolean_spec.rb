@@ -40,6 +40,30 @@ describe 'boolean searches' do
     expect(result).to eq(expected)
   end
 
+  it 'should parse foo=bar & baz=fez & fad=bad' do
+    result = Plunk.search 'foo=bar & baz=fez & fad=bad'
+    expected = Plunk::Helper.filter_builder({
+      and: [
+        Plunk::Helper.query_builder('foo:bar'),
+        Plunk::Helper.query_builder('baz:fez'),
+        Plunk::Helper.query_builder('fad:bad')
+      ]
+    })
+    expect(result).to eq(expected)
+  end
+
+  it 'should parse foo=bar | foo=baz | fez=baz' do
+    result = Plunk.search 'foo=bar | foo=baz | fez=baz'
+    expected = Plunk::Helper.filter_builder({
+      or: [
+        Plunk::Helper.query_builder('foo:bar'),
+        Plunk::Helper.query_builder('foo:baz'),
+        Plunk::Helper.query_builder('fez:baz')
+      ]
+    })
+    expect(result).to eq(expected)
+  end
+
   it 'should parse (foo=bar OR foo=bar)' do
     result = Plunk.search '(foo=bar OR foo=bar)'
     expected = Plunk::Helper.filter_builder({

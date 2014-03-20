@@ -2,6 +2,14 @@ require 'active_support/core_ext'
 
 module Plunk
   class Helper
+    def self.combine_subtrees(left, right, op)
+      if right[op]
+        { op => [left] + right[op] }
+      else
+        { op => [left, right] }
+      end
+    end
+
     def self.query_builder(query_string)
       {
         query: {

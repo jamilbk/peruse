@@ -2,7 +2,6 @@ require 'parslet'
 
 module Plunk
   class Transformer < Parslet::Transform
-
     # Field = Value
     rule(command: {
       field: simple(:field),
@@ -41,14 +40,15 @@ module Plunk
       left: subtree(:left),
       right: subtree(:right)
     }) do
-      { or: [left, right] }
+      Helper.combine_subtrees(left, right, :or)
     end
 
     rule(:and => {
       left: subtree(:left),
       right: subtree(:right)
     }) do
-      { and: [left, right] }
+      Helper.combine_subtrees(left, right, :and)
     end
+
   end
 end
