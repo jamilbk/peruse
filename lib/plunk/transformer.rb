@@ -12,6 +12,13 @@ module Plunk
       )
     end
 
+    # Limit
+    rule(command: {
+      limit: simple(:limit)
+    }) do
+      Helper.limit_builder(Integer(limit))
+    end
+
     # Regexp
     rule(command: {
       field: simple(:field),

@@ -30,6 +30,14 @@ module Plunk
       }
     end
 
+    def self.limit_builder(limit)
+      {
+        limit: {
+          value: limit
+        }
+      }
+    end
+
     def self.range_builder(range_min, range_max)
       {
         range: {

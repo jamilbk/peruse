@@ -13,7 +13,9 @@ module Plunk
     rule(:space?)     { space.maybe }
 
     # Numbers
-    rule(:integer)    { str('-').maybe >> digit.repeat(1) >> space? }
+    rule(:positive_integer) { digit.repeat(1) >> space? }
+    rule(:negative_integer) { str('-') >> positive_integer }
+    rule(:integer)    { negative_integer | positive_integer }
     rule(:float)      {
       str('-').maybe >> digit.repeat(1) >> str('.') >> digit.repeat(1) >> space?
     }
@@ -75,6 +77,11 @@ module Plunk
       query_value.as(:value)
     }
 
+    # Limit
+    rule(:limit) {
+      str('limit') >> space >> positive_integer.as(:limit)
+    }
+
     # Regexp
     rule(:regexp) {
       str('/') >> (str('\/') | match('[^/]')).repeat.as(:regexp) >> str('/')
@@ -102,6 +109,7 @@ module Plunk
     rule(:command) {
       (
         last        |
+        limit       |
         field_value |
         value_only
       ).as(:command) >> space?
