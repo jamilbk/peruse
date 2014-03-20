@@ -26,10 +26,12 @@ describe 'regexp searches' do
     expect(result).to eq(expected)
   end
 
-  it 'should parse /.*User\-Agent\: Microsoft\-WebDAV.*/' do
-    result = Plunk.search '/.*User\-Agent\: Microsoft\-WebDAV.*/'
+  it 'should parse http.headers=/.*User\-Agent\: Microsoft\-WebDAV.*/' do
+    result = Plunk.search 'http.headers=/.*User\-Agent\: Microsoft\-WebDAV.*/'
     expected = Plunk::Helper.filter_builder(
-      Plunk::Helper.query_builder('/.*User\-Agent\: Microsoft\-WebDAV.*/')
+      Plunk::Helper.query_builder(
+        'http.headers:/.*User\-Agent\: Microsoft\-WebDAV.*/'
+      )
     )
     expect(result).to eq(expected)
   end

@@ -72,7 +72,7 @@ module Plunk
 
     # Value-only
     rule(:value_only) {
-      rhs.as(:value)
+      query_value.as(:value)
     }
 
     # Regexp
