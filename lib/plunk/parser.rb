@@ -153,6 +153,7 @@ module Plunk
     }
     rule(:primary) { lparen >> or_operation >> rparen | negated_command }
 
+    # borrowed from Parslet's boolean algebra example
     rule(:negated_and) {
       (not_operator >> and_operation.as(:not)) |
       and_operation
