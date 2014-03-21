@@ -1,58 +1,84 @@
 require 'parslet'
+require 'chronic'
 
 module Plunk
   class Transformer < Parslet::Transform
+    # Base
+    rule(command: subtree(:command)) do
+      command
+    end
+
     # Field = Value
-    rule(command: {
+    rule(
       field: simple(:field),
       value: simple(:value)
-    }) do
+    ) do
       Helper.query_builder(
         String(field) + ":" + String(value)
       )
     end
 
     # Limit
-    rule(command: {
-      limit: simple(:limit)
-    }) do
+    rule(limit: simple(:limit)) do
       Helper.limit_builder(Integer(limit))
     end
 
     # Regexp
-    rule(command: {
+    rule(
       field: simple(:field),
       value: {
         regexp: simple(:regexp)
       }
-    }) do
+    ) do
       Helper.regexp_builder(String(field), String(regexp))
     end
 
     # Value-only
-    rule(command: { value: simple(:value) }) do
+    rule(value: simple(:value)) do
       Helper.query_builder(String(value))
     end
 
-    rule(command: {
-      quantity: simple(:quantity),
-      quantifier: simple(:quantifier)
-    }) do
-      start_timestamp = Helper.time_query_to_timestamp(
-        Integer(quantity),
-        String(quantifier)
-      )
-
-      start_time = Helper.timestamp_format start_timestamp
+    # Last
+    rule(last: subtree(:last)) do
+      start_time = last
       end_time = Helper.timestamp_format(Time.now)
 
       Helper.range_builder(start_time, end_time)
     end
 
-    rule(:negate => subtree(:not)) do
+    # Window
+    rule(
+      window_start: subtree(:window_start),
+      window_end: subtree(:window_end)
+    ) do
+      Helper.range_builder(window_start, window_end)
+    end
+
+    # Time parts
+    rule(datetime: simple(:datetime)) do
+      String(datetime)
+    end
+    rule(
+      quantity: simple(:quantity),
+      quantifier: simple(:quantifier)
+    ) do
+      timestamp = Helper.time_query_to_timestamp(
+        Integer(quantity).abs, # last -1h same as last 1h
+        String(quantifier)
+      )
+
+      Helper.timestamp_format timestamp
+    end
+    rule(chronic_time: simple(:chronic_time)) do
+      Helper.timestamp_format Chronic.parse(chronic_time)
+    end
+
+    # Negate
+    rule(negate: subtree(:not)) do
       { not: negate }
     end
 
+    # Command joining
     rule(:or => {
       left: subtree(:left),
       right: subtree(:right)

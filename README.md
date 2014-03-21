@@ -33,7 +33,24 @@ Plunk.configure do |config|
 end
 
 # Restrict timeframe to last 1 week and match documents with _type=syslog
+# s = seconds
+# m = minutes
+# h = hours
+# d = days
+# w = weeks
+# All times in Plunk are converted to UTC
 Plunk.search 'last 1w AND _type = syslog'
+
+# The ```window``` command can also be used to filter by time
+Plunk.search 'window -2d to -1d'
+
+# Plunk tries to parse the date with Chronic, so this works too. Note the
+# double quotes around the time string. This is needed if it contains a space.
+Plunk.search 'window "last monday" to "last thursday"'
+
+# Of course, absolute dates are supported as well. Date format is American style
+# e.g. MM/DD/YY
+Plunk.search 'window 3/14/12 to 3/15/12'
 
 # Use double quotes to wrap space-containing strings
 Plunk.search 'http.header = "UserAgent: Mozilla/5.0"'

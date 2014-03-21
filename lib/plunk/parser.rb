@@ -64,6 +64,16 @@ module Plunk
     rule(:rhs) {
       regexp | query_value
     }
+    rule(:chronic_time) {
+      string | match('[^\s]').repeat
+    }
+    rule(:relative_time) {
+      integer.as(:quantity) >>
+      match('s|m|h|d|w').as(:quantifier)
+    }
+    rule(:absolute_time) {
+      datetime.as(:datetime) | chronic_time.as(:chronic_time)
+    }
 
     # Field = Value
     rule(:field_value) {
@@ -75,6 +85,15 @@ module Plunk
     # Value-only
     rule(:value_only) {
       query_value.as(:value)
+    }
+
+    # Window
+    rule(:window) {
+      str('window') >>
+      space >>
+      (relative_time | absolute_time).as(:window_start) >>
+      space >> str('to') >> space >>
+      (relative_time | absolute_time).as(:window_end)
     }
 
     # Limit
@@ -89,10 +108,7 @@ module Plunk
 
     # Last
     rule(:last) {
-      str('last') >>
-      space >>
-      integer.as(:quantity) >>
-      match('s|m|h|d|w').as(:quantifier)
+      (str('last') >> space >> relative_time).as(:last)
     }
 
     # Subsearch
@@ -108,6 +124,7 @@ module Plunk
     # NOTE: order matters!
     rule(:command) {
       (
+        window      |
         last        |
         limit       |
         field_value |

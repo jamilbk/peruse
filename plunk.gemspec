@@ -1,10 +1,11 @@
 Gem::Specification.new do |s|
   s.name                    = "plunk"
-  s.version                 = "0.3.2"
+  s.version                 = "0.3.3"
   s.add_runtime_dependency  "json", "~> 1.8", ">= 1.8.0"
   s.add_runtime_dependency  "parslet", "~> 1.5", ">= 1.5.0"
   s.add_runtime_dependency  "elasticsearch", "~> 0.4", ">= 0.4.3"
   s.add_runtime_dependency  "activesupport", "~> 4.0", ">= 4.0.0"
+  s.add_runtime_dependency  "chronic", "~> 0.10", ">= 0.10.0"
   s.add_development_dependency "rspec", "~> 2.0", ">= 2.14.1"
   s.add_development_dependency "timecop", "~> 0.7", ">= 0.7.1"
   s.summary                 = "Elasticsearch query language"
