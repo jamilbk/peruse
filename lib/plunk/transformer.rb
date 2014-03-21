@@ -38,6 +38,11 @@ module Plunk
       Helper.query_builder(String(value))
     end
 
+    rule(indices: simple(:indices)) do
+      list = String(indices).split(',').collect { |s| s.strip }
+      Helper.indices_builder(list)
+    end
+
     # Last
     rule(last: subtree(:last)) do
       start_time = last

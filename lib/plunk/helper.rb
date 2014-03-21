@@ -58,6 +58,14 @@ module Plunk
       }
     end
 
+    def self.indices_builder(list)
+      {
+        indices: {
+          indices: list
+        }
+      }
+    end
+
     def self.time_query_to_timestamp(int_quantity, quantifier)
       case quantifier
       when 's'

@@ -54,6 +54,9 @@ module Plunk
     # COMMANDS
 
     # Command parts
+    rule(:enclosed_string) { 
+      string | match('[^\s]').repeat
+    }
     rule(:identifier) { match('[^=\s)(|]').repeat(1) >> match('[^=\s]').repeat }
     rule(:wildcard)   {
       (lparen >> wildcard >> rparen) |
@@ -64,15 +67,12 @@ module Plunk
     rule(:rhs) {
       regexp | query_value
     }
-    rule(:chronic_time) {
-      string | match('[^\s]').repeat
-    }
     rule(:relative_time) {
       integer.as(:quantity) >>
       match('s|m|h|d|w').as(:quantifier)
     }
     rule(:absolute_time) {
-      datetime.as(:datetime) | chronic_time.as(:chronic_time)
+      datetime.as(:datetime) | enclosed_string.as(:chronic_time)
     }
 
     # Field = Value
@@ -94,6 +94,17 @@ module Plunk
       (relative_time | absolute_time).as(:window_start) >>
       space >> str('to') >> space >>
       (relative_time | absolute_time).as(:window_end)
+    }
+
+    # Indices
+    rule(:indices) {
+      str('indices') >>
+      space >>
+      (enclosed_string >>
+        (space? >>
+          str(',') >>
+          space? >>
+          enclosed_string).repeat).as(:indices)
     }
 
     # Limit
@@ -124,10 +135,11 @@ module Plunk
     # NOTE: order matters!
     rule(:command) {
       (
+        field_value |
         window      |
         last        |
         limit       |
-        field_value |
+        indices     |
         value_only
       ).as(:command) >> space?
     }
