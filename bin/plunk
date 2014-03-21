@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+$LOAD_PATH << './lib'
+require './lib/plunk'
+
+host = ARGV[ARGV.index('-h')+1]
+
+Plunk.configure do |c|
+  c.elasticsearch_client = Elasticsearch::Client.new(
+    host: host,
+    randomize_hosts: true
+  )
+end
+
+puts Plunk.search($stdin.read)
