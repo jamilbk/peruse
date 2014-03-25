@@ -38,6 +38,7 @@ module Plunk
       Helper.query_builder(String(value))
     end
 
+    # Indices
     rule(indices: simple(:indices)) do
       list = String(indices).split(',').collect { |s| s.strip }
       Helper.indices_builder(list)
