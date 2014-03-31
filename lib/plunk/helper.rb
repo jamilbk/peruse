@@ -52,8 +52,10 @@ module Plunk
     def self.regexp_builder(field, regexp, flags=nil)
       {
         regexp: {
-          field => regexp,
-          flags: flags || 'ALL'
+          field => {
+            value: regexp,
+            flags: flags || 'ALL'
+          }
         }
       }
     end
