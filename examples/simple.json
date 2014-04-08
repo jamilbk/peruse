@@ -1,0 +1,25 @@
+{
+   "query":{
+      "filtered":{
+         "filter":{
+            "and":[
+               {
+                  "range":{
+                     "timestamp":{
+                        "gte":"2014-04-01T16:00:00.000+00:00",
+                        "lte":"2014-04-07T16:00:00.000+00:00"
+                     }
+                  }
+               },
+               {
+                  "query":{
+                     "query_string":{
+                        "query":"_type:syslog"
+                     }
+                  }
+               }
+            ]
+         }
+      }
+   }
+}
