@@ -39,4 +39,16 @@ describe 'the window command' do
     )
     expect(result).to eq(expected)
   end
+
+  it 'should parse NOT window -60m to -30m' do
+    result = Plunk.search 'NOT window -60m to -30m'
+    expected = Plunk::Helper.filter_builder(
+      not: 
+        Plunk::Helper.range_builder(
+          Plunk::Helper.timestamp_format(@time - 60.minutes),
+          Plunk::Helper.timestamp_format(@time - 30.minutes)
+        )
+    )
+    expect(result).to eq(expected)
+  end
 end
