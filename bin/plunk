@@ -1,12 +1,29 @@
 #!/usr/bin/env ruby
 $LOAD_PATH << './lib'
 require './lib/plunk'
+require 'optparse'
 
-host = ARGV[ARGV.index('-h')+1]
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: plunk [options]"
+  opts.separator ""
+  opts.separator "Options"
+
+  opts.on(
+    "-h",
+    "--host HOST",
+    "comma-separated list of Elasticsearch hosts to use"
+  ) do |h|
+
+    options[:host] = h
+  end
+
+
+end.parse!
 
 Plunk.configure do |c|
   c.elasticsearch_client = Elasticsearch::Client.new(
-    host: host,
+    host: options[:host].split(','),
     randomize_hosts: true
   )
 end
