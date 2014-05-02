@@ -28,4 +28,4 @@ Plunk.configure do |c|
   )
 end
 
-puts Plunk.search($stdin.read)
+puts Plunk.search($stdin.read).to_json
