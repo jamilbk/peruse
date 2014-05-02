@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 $LOAD_PATH << './lib'
-require './lib/plunk'
+require 'plunk'
 require 'optparse'
 
 options = {}
