@@ -18,14 +18,25 @@ OptionParser.new do |opts|
     options[:host] = h
   end
 
+  opts.on(
+    "-p",
+    "--parse-only",
+    "parse but don't execute query, returning ES-compatible JSON"
+  ) do |p|
+
+    options[:parse_only] = p
+  end
+
 
 end.parse!
 
 Plunk.configure do |c|
+  c.parse_only = options[:parse_only]
+
   c.elasticsearch_client = Elasticsearch::Client.new(
     host: options[:host].split(','),
     randomize_hosts: true
-  )
+  ) unless c.parse_only
 end
 
 puts Plunk.search($stdin.read).to_json

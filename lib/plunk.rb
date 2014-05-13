@@ -9,7 +9,8 @@ require 'plunk/result_set'
 module Plunk
   class << self
     attr_accessor :elasticsearch_options, :elasticsearch_client,
-      :parser, :transformer, :max_number_of_hits, :timestamp_field, :logger
+      :parser, :transformer, :max_number_of_hits, :timestamp_field, :logger,
+      :parse_only
   end
 
   def self.configure(&block)
@@ -17,7 +18,7 @@ module Plunk
     self.timestamp_field ||= :timestamp
     initialize_parser
     initialize_transformer
-    initialize_elasticsearch
+    initialize_elasticsearch unless self.parse_only
   end
 
   def self.initialize_elasticsearch
@@ -41,6 +42,12 @@ module Plunk
       self.logger.debug "Parsed Output: #{transformed}" 
     end
 
-    ResultSet.new(transformed).eval
+    result_set = ResultSet.new(transformed)
+
+    if self.parse_only
+      result_set.query
+    else
+      result_set.eval
+    end
   end
 end
