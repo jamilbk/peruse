@@ -4,6 +4,7 @@ require File.expand_path('../lib/plunk/version', __FILE__)
 Gem::Specification.new do |s|
   s.name                    = "plunk"
   s.version                 = Plunk::VERSION
+  s.required_ruby_version   = ">= 1.9.3"
   s.add_runtime_dependency  "json", "~> 1.8", ">= 1.8.0"
   s.add_runtime_dependency  "parslet", "~> 1.5", ">= 1.5.0"
   s.add_runtime_dependency  "elasticsearch", "~> 1.0", ">= 1.0.0"
