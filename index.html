@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Plunk by elbii</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/elbii/plunk">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/elbii/plunk/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/elbii/plunk/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Plunk</h1>
+          <p>Human-friendly query language for Elasticsearch</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/elbii">elbii</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="plunk" class="anchor" href="#plunk"><span class="octicon octicon-link"></span></a>Plunk</h1>
+
+<p>Human-friendly query language for Elasticsearch</p>
+
+<h2>
+<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h2>
+
+<p>Plunk is a ruby gem to take a human-friendly, one-line search command and
+translate it to full-fledged JSON to send to Elasticsearch. Currently it only
+supports a few commands, but the goal is to support a large subset of what
+Elasticsearch offers.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>gem install plunk
+</code></pre>
+
+<p>Plunk uses <a href="https://github.com/kschiess/parslet">Parslet</a> to first parse your
+query, and then <a href="https://github.com/elasticsearch/elasticsearch-ruby">Elasticsearch's official ruby library</a>
+to send it to Elasticsearch.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-ruby"><pre><span class="nb">require</span> <span class="s1">'plunk'</span>
+
+<span class="c1"># </span>
+<span class="c1"># Configuration is required before using Plunk</span>
+<span class="c1"># </span>
+<span class="c1"># Elasticsearch_options accepts the same params as Elasticsearch::Client</span>
+<span class="c1"># from the elasticsearch-ruby library</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">elasticsearch_options</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">host</span><span class="p">:</span> <span class="s1">'localhost'</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="c1"># Restrict timeframe to last 1 week and match documents with _type=syslog</span>
+<span class="c1"># s = seconds</span>
+<span class="c1"># m = minutes</span>
+<span class="c1"># h = hours</span>
+<span class="c1"># d = days</span>
+<span class="c1"># w = weeks</span>
+<span class="c1"># All times in Plunk are converted to UTC</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'last 1w AND _type = syslog'</span>
+
+<span class="c1"># The ```window``` command can also be used to filter by time</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'window -2d to -1d'</span>
+
+<span class="c1"># Plunk tries to parse the date with Chronic, so this works too. Note the</span>
+<span class="c1"># double quotes around the time string. This is needed if it contains a space.</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'window "last monday" to "last thursday"'</span>
+
+<span class="c1"># Of course, absolute dates are supported as well. Date format is American style</span>
+<span class="c1"># e.g. MM/DD/YY</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'window 3/14/12 to 3/15/12'</span>
+
+<span class="c1"># Use double quotes to wrap space-containing strings</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'http.header = "UserAgent: Mozilla/5.0"'</span>
+
+<span class="c1"># Commands are joined using parenthesized booleans</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'(last 1h AND severity = 5) OR (last 1w AND severity = 3)'</span>
+
+<span class="c1"># "AND" is aliased to "and" and "&amp;". Similarly, "OR" is aliased to "or" and "|".</span>
+<span class="c1"># The following queries are identical to one above</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'(last 1h and severity = 5) or (last 1w and severity = 3)'</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'(last 1h &amp; severity = 5) | (last 1w &amp; severity = 3)'</span>
+
+<span class="c1"># Use the NOT keyword to negate the following command or boolean chain</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'NOT message = Error'</span>
+
+<span class="c1"># Like AND and OR, "NOT" is aliased to "not" and "~"</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'not message = Error'</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'~ message = Error'</span>
+
+<span class="c1"># Regexp is supported as well</span>
+<span class="no">Plunk</span><span class="o">.</span><span class="n">search</span> <span class="s1">'http.headers = /.*User-Agent: Mozilla.*/ OR http.headers = /.*application\/json.*/'</span>
+</pre></div>
+
+<h2>
+<a name="translation" class="anchor" href="#translation"><span class="octicon octicon-link"></span></a>Translation</h2>
+
+<p>Under the hood, Plunk takes your query and translates it to
+Elasticsearch-compatible JSON. For example,</p>
+
+<p><code>last 24h &amp; _type=syslog</code></p>
+
+<p>gets translated to:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"query"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"filtered"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">"filter"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"and"</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">"range"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="nt">"timestamp"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">"gte"</span><span class="p">:</span> <span class="s2">"2013-08-23T05:43:13.770Z"</span><span class="p">,</span>
+                <span class="nt">"lte"</span><span class="p">:</span> <span class="s2">"2013-08-24T05:43:13.770Z"</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="nt">"query"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="nt">"query_string"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">"query"</span><span class="p">:</span> <span class="s2">"_type:syslog"</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>In general, commands are combined into a single filter using Elasticsearch's,
+<code>and</code>, <code>or</code>, and <code>not</code> filters.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
