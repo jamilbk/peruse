@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
   s.executables             << "plunk"
   s.summary                 = "Elasticsearch query language"
   s.description             = "Human-friendly query language for Elasticsearch"
-  s.authors                 = ["Ram Mehta", "Jamil Bou Kheir", "Roman Heinrich"]
-  s.email                   = ["ram.mehta@gmail.com", "jamil@elbii.com", "roman.heinrich@gmail.com"]
+  s.authors                 = ["Ram Mehta", "Jamil Bou Kheir"]
+  s.email                   = ["ram.mehta@gmail.com", "jamil@elbii.com"]
   s.files                   = `git ls-files`.split("\n")
   s.homepage                = "https://github.com/elbii/plunk"
   s.license                 = "MIT"

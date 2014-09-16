@@ -13,29 +13,43 @@ OptionParser.new do |opts|
     "-h",
     "--host HOST",
     "comma-separated list of Elasticsearch hosts to use"
-  ) do |h|
-
-    options[:host] = h
+  ) do |option|
+    options[:host] = option
   end
 
   opts.on(
     "-p",
     "--parse-only",
     "parse but don't execute query, returning ES-compatible JSON"
-  ) do |p|
-
-    options[:parse_only] = p
+  ) do |option|
+    options[:parse_only] = option
   end
 
+  opts.on(
+    "-s",
+    "--size SIZE",
+    "max number of hits to return"
+  ) do |option|
+    options[:size] = option
+  end
+  
+  opts.on(
+    "-r",
+    "--randomize-hosts",
+    "randomize hosts used for each search"
+  ) do |option|
+    options[:randomize_hosts] = option
+  end
 
 end.parse!
 
 Plunk.configure do |c|
   c.parse_only = options[:parse_only]
+  c.max_number_of_hits = options[:size]
 
   c.elasticsearch_client = Elasticsearch::Client.new(
     host: options[:host].split(','),
-    randomize_hosts: true
+    randomize_hosts: options[:randomize_hosts]
   ) unless c.parse_only
 end
 
