@@ -41,14 +41,33 @@ OptionParser.new do |opts|
     options[:randomize_hosts] = option
   end
 
+  opts.on(
+    "-t",
+    "--timestamp-field FIELD",
+    "timestamp field to use for timerange searches"
+  ) do |option|
+    options[:timestamp_field] = option
+  end
+
+  opts.on(
+    "-d",
+    "--debug",
+    "turn on debugging output"
+  ) do |option|
+    options[:debug] = option
+  end
+
 end.parse!
 
 Plunk.configure do |c|
   c.parse_only = options[:parse_only]
-  c.max_number_of_hits = options[:size]
+  c.max_number_of_hits = options[:size].to_i if options[:size]
+  c.timestamp_field =
+    options[:timestamp_field].strip if options[:timstamp_field]
+  c.logger = Logger.new if options[:debug]
 
   c.elasticsearch_client = Elasticsearch::Client.new(
-    host: options[:host].split(','),
+    host: options[:host].split(',').collect! { |h| h.strip },
     randomize_hosts: options[:randomize_hosts]
   ) unless c.parse_only
 end
