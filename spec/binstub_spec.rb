@@ -8,7 +8,9 @@ describe 'binstub' do
       "bin/plunk",
       "-h localhost,127.0.0.1",
       "-s 1",
-      "-r"
+      "-r",
+      "-d",
+      "-t timestamp"
     ) do |stdin, stdout, stderr|
       stdin.puts "last 1w"
       stdin.close

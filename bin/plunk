@@ -64,7 +64,7 @@ Plunk.configure do |c|
   c.max_number_of_hits = options[:size].to_i if options[:size]
   c.timestamp_field =
     options[:timestamp_field].strip if options[:timstamp_field]
-  c.logger = Logger.new if options[:debug]
+  c.logger = Logger.new(STDOUT) if options[:debug]
 
   c.elasticsearch_client = Elasticsearch::Client.new(
     host: options[:host].split(',').collect! { |h| h.strip },
