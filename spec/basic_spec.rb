@@ -19,21 +19,21 @@ describe 'basic searches' do
 
   it 'should parse bar' do
     result = Plunk.search 'bar'
-    result.should eq(basic_builder('bar'))
+    expect(result).to eq(basic_builder('bar'))
   end
 
   it 'should parse bar ' do
     result = Plunk.search 'bar '
-    result.should eq(basic_builder('bar'))
+    expect(result).to eq(basic_builder('bar'))
   end
 
   it 'should parse (bar) ' do
     result = Plunk.search '(bar) '
-    result.should eq(basic_builder('bar'))
+    expect(result).to eq(basic_builder('bar'))
   end
 
   it 'should parse  bar ' do
     result = Plunk.search ' bar '
-    result.should eq(basic_builder('bar'))
+    expect(result).to eq(basic_builder('bar'))
   end
 end
