@@ -1,6 +1,6 @@
 require 'parslet'
 
-module Plunk
+module Peruse
   class Parser < Parslet::Parser
 
     # BUILDING BLOCKS
@@ -127,7 +127,7 @@ module Plunk
       str('`') >> space? >> nested_search >> str('`')
     }
     rule(:nested_search) {
-      plunk_query.as(:initial_query) >> space? >> str('|') >> space? >>
+      peruse_query.as(:initial_query) >> space? >> str('|') >> space? >>
       match('[^`]').repeat.as(:extractors)
     }
 
@@ -172,10 +172,10 @@ module Plunk
         negated_or.as(:right)).as(:or) | 
       and_operation }
 
-    rule(:plunk_query) {
+    rule(:peruse_query) {
       space? >> or_operation >> space?
     }
 
-    root(:plunk_query)
+    root(:peruse_query)
   end
 end

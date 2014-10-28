@@ -1,34 +1,36 @@
-Plunk
-=====
+Note: Plunk has been renamed to Peruse
+
+Peruse
+======
 
 Human-friendly query language for Elasticsearch
 
 ## About
 
-Plunk is a ruby gem to take a human-friendly, one-line search command and
+Peruse is a ruby gem to take a human-friendly, one-line search command and
 translate it to full-fledged JSON to send to Elasticsearch. Currently it only
 supports a few commands, but the goal is to support a large subset of what
 Elasticsearch offers.
 
 ## Installation
 ```
-gem install plunk
+gem install peruse
 ```
 
-Plunk uses [Parslet](https://github.com/kschiess/parslet) to first parse your
+Peruse uses [Parslet](https://github.com/kschiess/parslet) to first parse your
 query, and then [Elasticsearch's official ruby library](https://github.com/elasticsearch/elasticsearch-ruby)
 to send it to Elasticsearch.
 
 ## Usage
 ```ruby
-require 'plunk'
+require 'peruse'
 
 # 
-# Configuration is required before using Plunk
+# Configuration is required before using Peruse
 # 
 # Elasticsearch_options accepts the same params as Elasticsearch::Client
 # from the elasticsearch-ruby library
-Plunk.configure do |config|
+Peruse.configure do |config|
   config.elasticsearch_options = { host: 'localhost' }
 end
 
@@ -38,46 +40,46 @@ end
 # h = hours
 # d = days
 # w = weeks
-# All times in Plunk are converted to UTC
-Plunk.search 'last 1w AND _type = syslog'
+# All times in Peruse are converted to UTC
+Peruse.search 'last 1w AND _type = syslog'
 
 # The ```window``` command can also be used to filter by time
-Plunk.search 'window -2d to -1d'
+Peruse.search 'window -2d to -1d'
 
-# Plunk tries to parse the date with Chronic, so this works too. Note the
+# Peruse tries to parse the date with Chronic, so this works too. Note the
 # double quotes around the time string. This is needed if it contains a space.
-Plunk.search 'window "last monday" to "last thursday"'
+Peruse.search 'window "last monday" to "last thursday"'
 
 # Of course, absolute dates are supported as well. Date format is American style
 # e.g. MM/DD/YY
-Plunk.search 'window 3/14/12 to 3/15/12'
+Peruse.search 'window 3/14/12 to 3/15/12'
 
 # Use double quotes to wrap space-containing strings
-Plunk.search 'http.header = "UserAgent: Mozilla/5.0"'
+Peruse.search 'http.header = "UserAgent: Mozilla/5.0"'
 
 # Commands are joined using parenthesized booleans
-Plunk.search '(last 1h AND severity = 5) OR (last 1w AND severity = 3)'
+Peruse.search '(last 1h AND severity = 5) OR (last 1w AND severity = 3)'
 
 # "AND" is aliased to "and" and "&". Similarly, "OR" is aliased to "or" and "|".
 # The following queries are identical to one above
-Plunk.search '(last 1h and severity = 5) or (last 1w and severity = 3)'
-Plunk.search '(last 1h & severity = 5) | (last 1w & severity = 3)'
+Peruse.search '(last 1h and severity = 5) or (last 1w and severity = 3)'
+Peruse.search '(last 1h & severity = 5) | (last 1w & severity = 3)'
 
 # Use the NOT keyword to negate the following command or boolean chain
-Plunk.search 'NOT message = Error'
+Peruse.search 'NOT message = Error'
 
 # Like AND and OR, "NOT" is aliased to "not" and "~"
-Plunk.search 'not message = Error'
-Plunk.search '~ message = Error'
+Peruse.search 'not message = Error'
+Peruse.search '~ message = Error'
 
 # Regexp is supported as well
-Plunk.search 'http.headers = /.*User-Agent: Mozilla.*/ OR http.headers = /.*application\/json.*/'
+Peruse.search 'http.headers = /.*User-Agent: Mozilla.*/ OR http.headers = /.*application\/json.*/'
 ```
 
 
 ## Translation
 
-Under the hood, Plunk takes your query and translates it to
+Under the hood, Peruse takes your query and translates it to
 Elasticsearch-compatible JSON. For example,
 
 ```last 24h & _type=syslog```

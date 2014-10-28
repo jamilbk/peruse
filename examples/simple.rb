@@ -1,10 +1,10 @@
 $LOAD_PATH << './lib'
-require './lib/plunk'
+require './lib/peruse'
 
-Plunk.configure do |c|
+Peruse.configure do |c|
   c.elasticsearch_options = { host: 'localhost' }
   c.timestamp_field = :timestamp
 end
 
 query = 'window "last monday" to "last tuesday" & _type = syslog' 
-puts Plunk.search query
+puts Peruse.search query

@@ -1,10 +1,10 @@
 require 'spec_helper'
 require 'shared/time_stubs'
-require 'shared/plunk_stubs'
+require 'shared/peruse_stubs'
 
 describe 'nested searches' do
   include_context "time stubs"
-  include_context "plunk stubs"
+  include_context "peruse stubs"
   
   before :each do
     fake_results = {
@@ -13,7 +13,7 @@ describe 'nested searches' do
       arr: [ 0, 1, 2, 3 ],
       :timestamp => @time.utc.to_datetime.iso8601(3)
     }.to_json
-    allow_any_instance_of(Plunk::ResultSet).to receive(:eval).and_return(fake_results)
+    allow_any_instance_of(Peruse::ResultSet).to receive(:eval).and_return(fake_results)
   end
 
   skip 'should transform' do

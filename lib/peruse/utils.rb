@@ -1,4 +1,4 @@
-module Plunk
+module Peruse
   class Utils
     # nested field matcher
     def self.extract_values(hash, keys)

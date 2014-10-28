@@ -5,7 +5,7 @@ describe 'binstub' do
     result = ""
 
     Open3.popen3(
-      "bin/plunk",
+      "bin/peruse",
       "-h localhost,127.0.0.1",
       "-s 1",
       "-r",
@@ -23,7 +23,7 @@ describe 'binstub' do
   it 'should not allow invalid options' do
     exit_status = -1 
 
-    Open3.popen3("bin/plunk", "-z") do |stdin, stdout, stderr, thread|
+    Open3.popen3("bin/peruse", "-z") do |stdin, stdout, stderr, thread|
       exit_status = thread.value.exitstatus
     end
 

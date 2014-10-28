@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 $LOAD_PATH << './lib'
-require 'plunk'
+require 'peruse'
 require 'optparse'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: plunk [options]"
+  opts.banner = "Usage: peruse [options]"
   opts.separator ""
   opts.separator "Options"
 
@@ -59,7 +59,7 @@ OptionParser.new do |opts|
 
 end.parse!
 
-Plunk.configure do |c|
+Peruse.configure do |c|
   c.parse_only = options[:parse_only]
   c.max_number_of_hits = options[:size].to_i if options[:size]
   c.timestamp_field =
@@ -72,4 +72,4 @@ Plunk.configure do |c|
   ) unless c.parse_only
 end
 
-puts Plunk.search($stdin.read).to_json
+puts Peruse.search($stdin.read).to_json

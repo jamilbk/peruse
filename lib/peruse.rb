@@ -1,12 +1,12 @@
 require 'elasticsearch'
 
-require 'plunk/helper'
-require 'plunk/utils'
-require 'plunk/parser'
-require 'plunk/transformer'
-require 'plunk/result_set'
+require 'peruse/helper'
+require 'peruse/utils'
+require 'peruse/parser'
+require 'peruse/transformer'
+require 'peruse/result_set'
 
-module Plunk
+module Peruse
   class << self
     attr_accessor :elasticsearch_options, :elasticsearch_client,
       :parser, :transformer, :max_number_of_hits, :timestamp_field, :logger,

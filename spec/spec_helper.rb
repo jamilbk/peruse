@@ -1,10 +1,10 @@
 require 'rspec'
-require 'plunk'
+require 'peruse'
 require 'parslet/rig/rspec'
 require 'shared/dummy_client'
 
 # Print ascii_tree when exception occurs
-module Plunk
+module Peruse
   class ParserWrapper < Parser
     def parse(query)
       begin
@@ -19,10 +19,10 @@ end
 RSpec.configure do |config|
   config.before :all do
     
-    # configure test instance of Plunk to use wrapper parser
-    Plunk.configure do |c|
-      c.parser = Plunk::ParserWrapper.new
-      c.transformer = Plunk::Transformer.new
+    # configure test instance of Peruse to use wrapper parser
+    Peruse.configure do |c|
+      c.parser = Peruse::ParserWrapper.new
+      c.transformer = Peruse::Transformer.new
     end
   end
 end

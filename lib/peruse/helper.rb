@@ -1,6 +1,6 @@
 require 'active_support/core_ext'
 
-module Plunk
+module Peruse
   class Helper
     def self.combine_subtrees(left, right, op)
       if right[op]
@@ -41,7 +41,7 @@ module Plunk
     def self.range_builder(range_min, range_max)
       {
         range: {
-          Plunk.timestamp_field => {
+          Peruse.timestamp_field => {
             gte: range_min,
             lte: range_max
           }

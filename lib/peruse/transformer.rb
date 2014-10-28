@@ -1,7 +1,7 @@
 require 'parslet'
 require 'chronic'
 
-module Plunk
+module Peruse
   class Transformer < Parslet::Transform
     # Base
     rule(command: subtree(:command)) do
