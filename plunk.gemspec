@@ -20,4 +20,8 @@ Gem::Specification.new do |s|
   s.files                   = `git ls-files`.split("\n")
   s.homepage                = "https://github.com/elbii/plunk"
   s.license                 = "MIT"
+  s.post_install_message    = <<-MESSAGE
+  !   The 'plunk' gem has been deprecated and replaced by 'peruse'. Please switch to the new gem as soon as possible.
+  !   See more at https://github.com/elbii/plunk
+  MESSAGE
 end

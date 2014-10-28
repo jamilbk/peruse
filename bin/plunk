@@ -3,6 +3,8 @@ $LOAD_PATH << './lib'
 require 'plunk'
 require 'optparse'
 
+warn "[DEPRECATION] This gem has been renamed to peruse and will no longer be supported. Please switch to peruse as soon as possible."
+
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: plunk [options]"
