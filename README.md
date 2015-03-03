@@ -1,4 +1,4 @@
-Note: Plunk has been renamed to Peruse
+Note: We've renamed this gem from Plunk to Peruse. You can find the old gem [here](https://rubygems.org/gems/plunk).
 
 Peruse
 ======
