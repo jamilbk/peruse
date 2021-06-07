@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency  "json", "~> 1.8", ">= 1.8.0"
   s.add_runtime_dependency  "parslet", "~> 1.5", ">= 1.5.0"
   s.add_runtime_dependency  "elasticsearch", "~> 1.0", ">= 1.0.0"
-  s.add_runtime_dependency  "activesupport", "~> 4.0", ">= 4.0.0"
+  s.add_runtime_dependency  "activesupport", ">= 4.0.0", "< 7"
   s.add_runtime_dependency  "chronic", "~> 0.10", ">= 0.10.0"
   s.add_development_dependency "rspec", "~> 3.1", ">= 3.1.0"
   s.add_development_dependency "timecop", "~> 0.7", ">= 0.7.1"
