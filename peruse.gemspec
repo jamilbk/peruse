@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name                    = "peruse"
   s.version                 = Peruse::VERSION
   s.required_ruby_version   = ">= 1.9.3"
-  s.add_runtime_dependency  "json", "~> 1.8", ">= 1.8.0"
+  s.add_runtime_dependency  "json", ">= 1.8.0", "< 3.0"
   s.add_runtime_dependency  "parslet", "~> 1.5", ">= 1.5.0"
   s.add_runtime_dependency  "elasticsearch", "~> 1.0", ">= 1.0.0"
   s.add_runtime_dependency  "activesupport", ">= 4.0.0", "< 7"
