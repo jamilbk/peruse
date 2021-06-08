@@ -14,10 +14,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency "timecop", "~> 0.7", ">= 0.7.1"
   s.executables             << "peruse"
   s.summary                 = "Elasticsearch query language"
-  s.description             = "Human-friendly query language for Elasticsearch. Formerly https://rubygems.org/gems/plunk."
+  s.description             = "Human-friendly query language for Elasticsearch."
   s.authors                 = ["Ram Mehta", "Jamil Bou Kheir"]
   s.email                   = ["ram.mehta@gmail.com", "jamil@elbii.com"]
   s.files                   = `git ls-files`.split("\n")
-  s.homepage                = "https://github.com/elbii/peruse"
+  s.homepage                = "https://github.com/jamilbk/peruse"
   s.license                 = "MIT"
 end
